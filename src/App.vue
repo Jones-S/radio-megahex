@@ -1,17 +1,20 @@
 <template>
-  <div id="app" :class="['App', { 'is-dark' : spymasterView }]">
-    <Heading v-if="section.title" :level="section.level || 2">{{ section.title }}</Heading>
-    <Paragraph :content="section.text"></Paragraph>
+  <div id="app" :class="['App']">
+    <Heading :level="1">Radio Megahex</Heading>
+    <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph>
+    <AudioPlayer></AudioPlayer>
   </div>
 </template>
 
 <script>
 import Heading from './components/Heading.vue'
 import Paragraph from './components/Paragraph.vue'
+import AudioPlayer from './components/AudioPlayer.vue'
 
 export default {
   name: 'app',
   components: {
+    AudioPlayer,
     Paragraph,
     Heading
   },
@@ -21,7 +24,7 @@ export default {
   metaInfo:() => {
     const ogImageUrl = require('@/assets/covidnames_og.jpg');
     return {
-      title: 'CovidNames – CodeNames in Quarantäne-Zeiten',
+      title: 'Radio Megahex',
       htmlAttrs: {
         // reptilian: 'gator'
       },
