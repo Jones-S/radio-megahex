@@ -1,0 +1,39 @@
+// Page-level styling (e.g. html and body elements).
+
+html {
+  @include word-wrap;
+  min-height: 100%;
+  font-family: $s-font-family-base;
+  font-size: (100% / 1.6); // now 1rem equals 10px
+  font-weight: normal;
+  line-height: 1.2;
+  color: $s-color-text-default;
+  background: $s-color-body-background;
+  -moz-osx-font-smoothing: grayscale; // sass-lint:disable-line no-vendor-prefixes
+  -webkit-font-smoothing: antialiased; // sass-lint:disable-line no-vendor-prefixes
+  -webkit-text-size-adjust: none; // sass-lint:disable-line no-vendor-prefixes
+  font-kerning: normal;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+}
+
+body {
+  min-height: 100%;
+}
+
+main {
+  outline: none;
+}
+
+// TODO: Defined h1-h6 heading styles
+
+p {
+  margin-bottom: 1em;
+}
+
+a {
+  @include reset-link;
+}
+
+ul {
+  @include reset-list;
+}

@@ -1,0 +1,95 @@
+/*
+ * Naming conventions inspired by
+ * https://speckyboy.com/naming-conventions-sizes-scalable-css/
+ */
+
+/*
+ * Settings – Variables
+ */
+
+$s-font-family-base: poynter-gothic-text, sans-serif;
+$s-font-family-cards: demos-next-condensed, sans-serif;
+
+
+/*$s-fz-25
+ * Font Sizes
+ * Before starting a project:
+ * Set up a type-specification file
+ */
+
+/* Font-Sizes */
+$s-fz-14: 1.4rem;
+$s-fz-18: 1.8rem;
+$s-fz-25: 2.5rem;
+$s-fz-30: 3rem;
+
+
+/*
+ * Settings – Spacing
+ */
+
+// $s-size-spacer-atomic:
+// $s-size-spacer-micro:
+// $s-size-spacer-tiny:
+$s-size-spacer-small: 2rem;
+// $s-size-spacer-reduced:
+$s-size-spacer-medium: $s-size-spacer-small * 2;
+// $s-size-spacer-increased: $s-size-spacer-small * 3;
+// $s-size-spacer-large: $s-size-spacer-small * 4;
+// $s-size-spacer-huge: $s-size-spacer-small * 6;
+// $s-size-spacer-giant:
+
+$s-size-gutter-small: $s-size-spacer-small;
+$s-size-gutter-medium: $s-size-gutter-small * 2;
+$s-size-gutter-large: $s-size-gutter-small * 4;
+
+
+/*
+ * Settings – Specific sizes
+ */
+
+$s-the-header-bar-height-small: 70px;
+$s-the-header-bar-height: 5.4rem;
+
+$s-card-size: 18.5rem;
+$s-card-spacer-mobile: 1rem;
+$s-card-spacer: $s-size-spacer-small;
+$s-icon-size: 3rem;
+
+/*
+ * Settings – Animations
+ */
+
+$s-animation-duration-default: 0.3s;
+$s-animation-easing-default: ease-in-out;
+
+/*
+ * Settings – Breakpoints
+ * Why we use px: https://adamwathan.me/dont-use-em-for-media-queries/
+ */
+
+$s-size-breakpoint-initial: 1px;
+$s-size-breakpoint-tiny: 320px;
+$s-size-breakpoint-small: 375px;
+// Add a new breakpoint like this:
+// $s-size-breakpoint-small-01: 400px;
+$s-size-breakpoint-reduced: 420px;
+$s-size-breakpoint-medium: 768px;
+$s-size-breakpoint-increased: 1024px;
+$s-size-breakpoint-large: 1450px;
+$s-size-breakpoint-huge: 1920px;
+$s-size-breakpoint-giant: 2200px;
+
+// $s-size-content-max-width-small: $s-fz-medium * 30; // 600px = 20px * 30em (don't make paragraphs too wide!)
+// $s-size-content-max-width-medium: 1100px;
+// $s-size-content-max-width-large: 1440px;
+$s-size-content-max-width-large: 5 * $s-card-size + 5 * $s-size-spacer-small + 4 * $s-card-spacer;
+
+/*
+ * Settings – z-Index
+ */
+
+$s-zindex-map: (
+  'iconbuttons': 120,
+  'sidecontainer': 110,
+);

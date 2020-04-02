@@ -1,0 +1,72 @@
+/*
+ * Strong,B Styles
+ */
+
+@mixin font-style-strong {
+  // You might want to replace this with an actual font file
+  font-weight: bold;
+}
+
+/*
+ * Italic
+ */
+
+@mixin font-style-italic {
+  // You might want to replace this with an actual font file
+  font-style: italic;
+}
+
+/*
+ * Link & Button Styles
+ */
+
+@mixin font-style-link {
+  @include font-style-base;
+  text-decoration: underline;
+}
+
+@mixin font-style-button {
+  @include font-style-base;
+}
+
+/*
+ * Font Styles
+ */
+
+@mixin font-style-base {
+  font-family: $s-font-family-base;
+  font-size: $s-fz-14;
+  font-weight: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  
+  @include mq($from: medium) {
+    font-size: $s-fz-18;
+  }
+}
+
+@mixin font-style-heading-base {
+  @include font-style-base;
+  font-size: $s-fz-18;
+  
+  @include mq($from: medium) {
+    font-size: $s-fz-30;
+  }
+}
+
+@mixin font-style-heading-3 {
+  @include font-style-base;
+  font-size: $s-fz-14;
+  
+  @include mq($from: medium) {
+    font-size: $s-fz-25;
+  }
+}
+
+@mixin font-style-cards {
+  @include fluid-size('font-size', 320px, 1150px, 10px, 25px); // can't use rem!
+  font-family: $s-font-family-cards;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
