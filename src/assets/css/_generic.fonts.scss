@@ -1,13 +1,12 @@
-/* TODO: Add your fonts here (this is just a @font-face example):
 @font-face {
-  font-family: 'Lucid Placeholder Fonto';
+  font-family: 'Cygnito-Mono';
   font-style: normal;
   font-weight: normal;
-  src: url('~static/fonts/lucid-fonto.woff2') format('woff2'),
-       url('~static/fonts/lucid-fonto.woff') format('woff'), // sass-lint:disable-line indentation
-       url('~static/fonts/lucid-fonto.ttf') format('truetype'); // sass-lint:disable-line indentation
+  // ~@:
+  // Force webpack to handle this request as a module request with ~
+  // https://stackoverflow.com/a/54030632/1121268
+  src: url('~@/assets/fonts/cygnito-mono.woff2') format('woff2'),
+       url('~@/assets/fonts/cygnito-mono.woff') format('woff'), // sass-lint:disable-line indentation
+       url('~@/assets/fonts/cygnito-mono.ttf') format('truetype'); // sass-lint:disable-line indentation
   font-display: swap; // display content before font is loaded!
 }
-*/
-
-@import url("https://use.typekit.net/rgy5gqh.css");

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="41px" viewBox="0 0 34 41" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>icon/volume</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="14 0.587950031 14 23.58795 6 16.58795 0 16.58795 0 7.58795003 6 7.58795003"></polygon>
+        <filter x="-75.0%" y="-56.1%" width="250.0%" height="212.2%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.786112174   0 0 0 0 0.625895579  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Archiv-Eintrag-b-Copy-2" transform="translate(-359.000000, -52.000000)">
+            <g id="icon/volume" transform="translate(365.500000, 60.000000)">
+                <g id="Volume-Button">
+                    <g id="Volume-Icon" transform="translate(0.500000, 0.412050)">
+                        <g id="Path-2">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                            <use fill="#000000" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        </g>
+                        <path d="M16.1339607,3.81694665 C20.8642498,8.78990828 21.6153817,15.1712159 16.1940066,20.0357884" id="Path-3" stroke="#000000"></path>
+                        <path d="M18.3640828,1.92057212 C19.3618004,3.07757568 20.3595181,4.23457923 21.3572357,5.39158278" id="Path-4" stroke="#000000"></path>
+                        <path d="M21.4296493,5.20481319 C21.8081475,7.30110168 22.1866457,9.39739017 22.5651439,11.4936787" id="Path-5" stroke="#000000"></path>
+                        <path d="M22.5990205,11.4460004 C22.2770963,17.7292787 23.317485,15.269002 20.6420624,19.2170134" id="Path-6" stroke="#000000"></path>
+                        <path d="M20.890491,19.1894103 C20.0110727,20.2407211 19.1316544,21.292032 18.2522361,22.3433428" id="Path-7" stroke="#000000"></path>
+                        <path d="M23.49469,0 C24.4352894,1.31760389 25.3758888,2.63520778 26.3164881,3.95281167" id="Path-8" stroke="#000000"></path>
+                        <path d="M26.2645081,3.90387875 C26.0865214,5.4258179 25.9085346,6.94775704 25.7305478,8.46969618" id="Path-9" stroke="#000000"></path>
+                        <path d="M25.7305478,8.46969618 C26.3182235,15.4774757 27.397176,19.3927135 22.1856897,24.3060367" id="Path-10" stroke="#000000"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

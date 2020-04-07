@@ -54,19 +54,7 @@
   }
 }
 
-@mixin font-style-heading-3 {
+@mixin font-style-cygnito-small {
   @include font-style-base;
   font-size: $s-fz-14;
-  
-  @include mq($from: medium) {
-    font-size: $s-fz-25;
-  }
-}
-
-@mixin font-style-cards {
-  @include fluid-size('font-size', 320px, 1150px, 10px, 25px); // can't use rem!
-  font-family: $s-font-family-cards;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;
 }

@@ -1,8 +1,8 @@
 <template>
   <div id="app" :class="['App']">
-    <Heading :level="1">Radio Megahex</Heading>
+    <Heading class="Heading" :level="1">megahex.fm</Heading>
     <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph>
-    <AudioPlayer></AudioPlayer>
+    <AudioPlayer :src="src"></AudioPlayer>
   </div>
 </template>
 
@@ -19,7 +19,9 @@ export default {
     Heading
   },
   data: () => {
-    return {}
+    return {
+      src: 'http://kein.fm:8000/zuhause?type=.mp3'
+    }
   },
   metaInfo:() => {
     const ogImageUrl = require('@/assets/covidnames_og.jpg');
@@ -43,6 +45,7 @@ export default {
 </script>
 
 <style lang="scss">
+// Do not add 'scoped' here, because otherwise elements.page styling is not applied to all elements on the page
 @import '@/assets/css/_generic.normalize';
 @import '@/assets/css/_generic.fonts';
 @import '@/assets/css/_generic.box-sizing';
