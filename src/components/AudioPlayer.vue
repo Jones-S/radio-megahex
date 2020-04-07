@@ -1,10 +1,11 @@
 <template>
   <div class="AudioPlayer">
-    <audio ref="audio" countrols="controls">
-      <source src="http://kein.fm:8000/listen?type=.mp3" type="audio/mpeg">      
+    <!-- <audio ref="audio" countrols="controls">
+      <source src="http://kein.fm:8000/zuhause?type=.mp3" type="audio/mpeg">      
       Sorry, your browser does not support the audio tag
-    </audio>
+    </audio> -->
     <button @click="play">Play</button>
+    <button @click="stop">Stop</button>
   </div>
 </template>
 
@@ -14,6 +15,9 @@ export default {
   methods: {
     play() {
       this.$refs.audio.play()
+    },
+    stop() {
+      this.$refs.audio.pause()
     }
   }
 }
