@@ -1,7 +1,7 @@
 <template>
   <div class="AudioPlayer">
-    <div class="AudioPlayer__text-wrapper">
-      <span class="AudioPlayer__text">Corona-News—Die etwas andere Sichtweise zur weltweiten Krise. Moderiert durch Lenski und Markinski.</span>
+    <div ref="wrapper" class="AudioPlayer__text-wrapper">
+      <span ref="ticker" class="AudioPlayer__text"></span>
     </div>
     <audio ref="audio" countrols="controls">
       <source :src="src" type="audio/mpeg">      
@@ -22,12 +22,25 @@ export default {
       default: ''
     },
   },
+  data() {
+    return {
+      tickerPercent: 0
+    }
+  },
+  mounted() {
+    window.requestAnimationFrame(this.animate);
+  },
   methods: {
     play() {
       this.$refs.audio.play()
     },
     stop() {
       this.$refs.audio.pause()
+    },
+    animate() {
+      this.$refs.ticker.style.transform =`translateX(${this.tickerPercent})`
+      this.tickerPercent = this.tickerPercent >= 100 ? 0 : this.tickerPercent++
+      window.requestAnimationFrame(this.animate)
     }
   }
 }
@@ -57,10 +70,6 @@ export default {
       display: inline-block;
       padding: 0 1em;
       white-space: nowrap;
-      animation-name: pass-by;
-      animation-iteration-count: infinite;
-      animation-timing-function: linear;
-      animation-duration: 50s;
     }
 
     &__button {
@@ -69,15 +78,6 @@ export default {
       width: $c-audioplayer-button-size;
       height: $c-audioplayer-button-size;
       border: 1px solid $s-color-black;
-    }
-
-    @keyframes pass-by {
-      100% {
-        transform: translateX(-100%);
-      }
-      0% {
-        transform: translateX(0%);
-      }
     }
   }
 </style>
