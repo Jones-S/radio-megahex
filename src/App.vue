@@ -3,6 +3,7 @@
     <Heading class="Heading" :level="1">megahex.fm</Heading>
     <!-- <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph> -->
     <AudioPlayer :src="src"></AudioPlayer>
+    <TwitchEmbed></TwitchEmbed>
   </div>
 </template>
 
@@ -10,11 +11,13 @@
 import Heading from './components/Heading.vue'
 import Paragraph from './components/Paragraph.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
+import TwitchEmbed from './components/TwitchEmbed.vue'
 
 export default {
   name: 'app',
   components: {
     AudioPlayer,
+    TwitchEmbed,
     Paragraph,
     Heading
   },
