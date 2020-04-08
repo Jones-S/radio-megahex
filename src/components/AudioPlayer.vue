@@ -158,12 +158,10 @@ export default {
 
       &--volume {
         background-image: url('~@/assets/icon/volume.svg');
-        background-position: 30% center;
       }
 
       &--volume-down {
         background-image: url('~@/assets/icon/volume-down.svg');
-        background-position: center center;
       }
 
       &--stop {
