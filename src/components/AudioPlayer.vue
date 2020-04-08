@@ -2,7 +2,7 @@
   <div class="AudioPlayer">
     <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
-        <span ref="ticker" class="AudioPlayer__text">Dieser Radio ist noch nicht auf Sendung!!! Work in Progress!!! Am Donnerstag gibt's hier was zu sehen. Bis dahin, schön zuhause bleiben.</span>
+        <span ref="ticker" class="AudioPlayer__text">Dieses Radio ist noch nicht auf Sendung!!! Bald gibt's hier jedoch was zu sehen, respektive zu hören. Bis dahin, schön zuhause bleiben.</span>
         <span v-show="overflowing" class="AudioPlayer__dots">...</span>
       </div>
     </div>
@@ -12,7 +12,7 @@
     </audio>
     <div class="AudioPlayer__controls">
       <button :class="['AudioPlayer__button', playing ? 'AudioPlayer__button--stop' : 'AudioPlayer__button--play']" @click="playing ? stop() : play()">Play</button>
-      <button class="AudioPlayer__button AudioPlayer__button--volume">
+      <button :class="['AudioPlayer__button AudioPlayer__button--volume', { 'AudioPlayer__button--volume-down' : volume == 0 }]">
         Adjust volume
         <div class="AudioPlayer__range-wrapper">
           <input type="range" v-model="volume" @change="adjustVolume" />
@@ -160,6 +160,12 @@ export default {
         background-image: url('~@/assets/icon/volume.svg');
         background-position: 30% center;
       }
+
+      &--volume-down {
+        background-image: url('~@/assets/icon/volume-down.svg');
+        background-position: center center;
+      }
+
       &--stop {
         background-image: url('~@/assets/icon/stop.svg');
       }

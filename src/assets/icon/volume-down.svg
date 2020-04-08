@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="26px" viewBox="0 0 28 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>icon/volume-down</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/volume-down" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Volume-Button" fill="#000000">
+            <g id="Volume-Icon" transform="translate(0.500000, 0.412050)">
+                <polygon id="Path-2" points="14 0.587950031 14 23.58795 6 16.58795 0 16.58795 0 7.58795003 6 7.58795003"></polygon>
+            </g>
+        </g>
+        <rect id="Rectangle" fill="#000000" transform="translate(21.250000, 12.500000) rotate(-135.000000) translate(-21.250000, -12.500000) " x="16" y="12" width="10.5" height="1"></rect>
+        <polygon id="Rectangle" fill="#000000" transform="translate(21.385723, 12.635723) rotate(-225.000000) translate(-21.385723, -12.635723) " points="16.1357233 12.327665 19.794733 11.9437816 26.6357233 12.327665 26.6357233 13.327665 19.0876263 12.9437816 16.1357233 13.327665"></polygon>
+    </g>
+</svg>

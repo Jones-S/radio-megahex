@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="['App']">
     <Heading class="Heading" :level="1">megahex.fm</Heading>
-    <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph>
+    <!-- <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph> -->
     <AudioPlayer :src="src"></AudioPlayer>
   </div>
 </template>
