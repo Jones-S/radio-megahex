@@ -1,29 +1,24 @@
 <template>
   <div id="app" :class="['App']">
     <Heading class="Heading" :level="1">megahex.fm</Heading>
-    <!-- <Paragraph :content="'Niemand hier. Also hör zu!'"></Paragraph> -->
     <AudioPlayer :src="src"></AudioPlayer>
-    <TwitchEmbed></TwitchEmbed>
+    <router-view />
   </div>
 </template>
 
 <script>
 import Heading from './components/Heading.vue'
-import Paragraph from './components/Paragraph.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
-import TwitchEmbed from './components/TwitchEmbed.vue'
 
 export default {
   name: 'app',
   components: {
-    AudioPlayer,
-    TwitchEmbed,
-    Paragraph,
-    Heading
+    Heading,
+    AudioPlayer
   },
   data: () => {
     return {
-      src: 'http://kein.fm:8000/zuhause?type=.mp3'
+      src: 'https://zzz.megahex.fm:8001/listen?type=.mp3'
     }
   },
   metaInfo:() => {

@@ -17,18 +17,6 @@ const mutations = {
 }
 
 const getters = {
-  cards: (state) => {
-    if (state.current25Words.length && state.gamePattern.length && state.current25Words.length === state.gamePattern.length) {
-      return state.current25Words.map((word, index) => {
-        return {
-          text: word,
-          type: state.gamePattern[index]
-        }
-      })
-    } else {
-      return false
-    }
-  }
 }
 
 
