@@ -39,22 +39,33 @@
   font-weight: normal;
   line-height: 1.2;
   letter-spacing: normal;
-  
+
   @include mq($from: medium) {
     font-size: $s-fz-19;
   }
 }
 
+@mixin font-style-extra {
+  @include font-style-base;
+  font-family: $s-font-family-extra;
+}
+
 @mixin font-style-heading-base {
   @include font-style-base;
+  font-family: $s-font-family-extra;
   font-size: $s-fz-19;
-  
+
   @include mq($from: medium) {
     font-size: $s-fz-30;
   }
 }
 
+@mixin font-style-heading-1 {
+  font-size: $s-fz-19;
+  font-weight: bold;
+}
+
 @mixin font-style-cygnito-small {
-  @include font-style-base;
+  @include font-style-extra;
   font-size: $s-fz-14;
 }

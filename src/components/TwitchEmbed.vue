@@ -14,11 +14,14 @@ export default {
   components: {
     VueTwitchPlayer
   },
-  data() {
-    return {
-      channel: 'megahex_fm'
-    }
-  }
+  props: {
+    channel: {
+      type: String,
+      required: true,
+      default: ''
+    },
+  },
+
 }
 </script>
 
@@ -26,7 +29,7 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/css/global';
   $c: 'TwitchEmbed';
-  
+
   .#{$c} {
 
   }

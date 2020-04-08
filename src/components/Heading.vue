@@ -17,7 +17,7 @@ export default {
       {
         class: {
           Heading: true,
-          [modifierClassLevel]: true        
+          [modifierClassLevel]: true
         }
       },
       [
@@ -41,7 +41,7 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/css/global';
   $c: 'Heading';
-  
+
   .#{$c} {
     margin-bottom: 0.4em;
     color: $s-color-black;
@@ -51,11 +51,11 @@ export default {
     }
 
     &--h2 {
-      @include font-style-heading-base;
+      @include font-style-heading-1;
     }
 
     &--h3 {
-      @include font-style-heading-base;
+      @include font-style-heading-1;
     }
   }
 </style>

@@ -1,10 +1,15 @@
 <template>
   <div class="DefaultView">
     <div v-if="page">
-      <Paragraph v-if="text" :content="text"></Paragraph>
+      <ContentBox v-for="(paragraph, index) in paragraphs" :key="index" :inverted="!!paragraph.inverted">
+        <Heading :level="2">{{ paragraph.title }}</Heading>
+        <Paragraph v-if="paragraph.text" :content="paragraph.text"></Paragraph>
+      </ContentBox>
     </div>
     <Loader v-else></Loader>
-    <TwitchEmbed></TwitchEmbed>
+    <ContentBox v-if="channel">
+      <TwitchEmbed :channel="channel"></TwitchEmbed>
+    </ContentBox>
   </div>
 </template>
 
@@ -13,7 +18,8 @@ import { mapActions, mapGetters } from 'vuex'
 import Paragraph from '../components/Paragraph.vue'
 import TwitchEmbed from '../components/TwitchEmbed.vue'
 import Loader from '../components/Loader.vue'
-// import Heading from '../components/Heading.vue'
+import Heading from '../components/Heading.vue'
+import ContentBox from '../components/ContentBox.vue'
 
 
 export default {
@@ -22,13 +28,18 @@ export default {
     Loader,
     TwitchEmbed,
     Paragraph,
-    // Heading
+    ContentBox,
+    Heading
   },
   computed: {
     ...mapGetters('data', ['page']),
-    text() {
-      if (!this.page || !this.page.content || !this.page.content.text) return false
-      return this.page.content.text
+    paragraphs() {
+      if (!this.page || !this.page.content || !this.page.content.paragraphs) return false
+      return this.page.content.paragraphs
+    },
+    channel() {
+      if (!this.page || !this.page.content || !this.page.content.twitch_channel) return false
+      return this.page.content.twitch_channel
     }
   },
   watch: {

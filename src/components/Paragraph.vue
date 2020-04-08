@@ -1,10 +1,13 @@
 <template>
-  <p v-if="content" class="Paragraph" v-html="content" />
+  <p v-if="content" class="Paragraph" v-html="convertKirbyTags(content)" />
 </template>
 
 <script>
+import { kirbyTagsHelper } from '../mixins/helpers'
+
 export default {
   name: 'Paragraph',
+  mixins: [kirbyTagsHelper],
   props: {
     content: {
       type: String,
@@ -19,7 +22,7 @@ export default {
 <style lang="scss">
   @import '@/assets/css/global';
   $c: 'Paragraph';
-  
+
   .#{$c} {
     @include font-style-base;
     color: $s-color-black;

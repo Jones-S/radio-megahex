@@ -1,28 +1,38 @@
 <template>
   <div id="app" :class="['App']">
-    <Heading class="Heading" :level="1">megahex.fm</Heading>
-    <AudioPlayer :src="src"></AudioPlayer>
+    <Logo />
+    <AudioPlayer :src="src" :program="program"></AudioPlayer>
     <router-view />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Heading from './components/Heading.vue'
+import Logo from './components/Logo.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
 
 export default {
   name: 'app',
   components: {
-    Heading,
-    AudioPlayer
+    AudioPlayer,
+    Logo,
+    Heading
   },
   data: () => {
     return {
       src: 'https://zzz.megahex.fm:8001/listen?type=.mp3'
     }
   },
+  computed: {
+    ...mapGetters('data', ['page']),
+    program() {
+      if (!this.page || !this.page.content || !this.page.content.broadcast) return '...'
+      return this.page.content.broadcast
+    }
+  },
   metaInfo:() => {
-    const ogImageUrl = require('@/assets/covidnames_og.jpg');
+    const ogImageUrl = require('@/assets/og_image.jpg');
     return {
       title: 'Radio Megahex',
       htmlAttrs: {
@@ -30,12 +40,12 @@ export default {
       },
       meta: [
         { charset: 'utf-8' },
-        { name: 'description', content: 'Radio Megahex!!' },
+        { name: 'description', content: 'Megahex.fm – Internetradio vom Feinsten' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { property: 'og:image', content: ogImageUrl },
-        { name: 'og:image:width', content: 1080 },
-        { name: 'og:image:height', content: 724 },
-        { name: 'og:image:alt', content: 'CovidNames – CodeNames Spiel' }
+        { name: 'og:image:width', content: 642 },
+        { name: 'og:image:height', content: 640 },
+        { name: 'og:image:alt', content: 'Megahex.fm – Internetradio vom Feinsten' }
       ]
     }
   },

@@ -2,12 +2,12 @@
   <div class="AudioPlayer">
     <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
-        <span ref="ticker" class="AudioPlayer__text">Dieses Radio ist noch nicht auf Sendung!!! Bald gibt's hier jedoch was zu sehen, respektive zu hören. Bis dahin, schön zuhause bleiben.</span>
+        <span ref="ticker" class="AudioPlayer__text">{{ program }}</span>
         <span v-show="overflowing" class="AudioPlayer__dots">...</span>
       </div>
     </div>
     <audio ref="audio" countrols="controls">
-      <source :src="src" type="audio/mpeg">      
+      <source :src="src" type="audio/mpeg">
       Sorry, your browser does not support the audio tag
     </audio>
     <div class="AudioPlayer__controls">
@@ -30,6 +30,11 @@ export default {
       type: String,
       required: true,
       default: ''
+    },
+    program: {
+      type: String,
+      required: true,
+      default: 'Radio megahex.fm'
     },
   },
   data() {
@@ -96,8 +101,9 @@ export default {
 
   $c-audioplayer-button-size: 5.2rem;
   $c-audioplayer-text-wrapper-size: 3.5rem;
-  
+
   .#{$c} {
+    @include font-style-extra;
 
     &__textbox {
       padding: 0 0.3rem;
@@ -107,7 +113,7 @@ export default {
       border: 1px solid $s-color-black;
       position: relative;
       margin-bottom: $s-box-distance;
-      
+
       &--overflowing {
         padding-right: 3.3rem;
       }
@@ -151,7 +157,7 @@ export default {
       margin-right: $s-box-distance;
       flex: 0 0 auto;
       position: relative;
-      
+
       &:hover {
         background-color: $s-color-primary;
       }
