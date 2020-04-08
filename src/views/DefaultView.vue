@@ -7,7 +7,7 @@
       </ContentBox>
     </div>
     <Loader v-else></Loader>
-    <ContentBox>
+    <ContentBox v-if="channel">
       <TwitchEmbed :channel="channel"></TwitchEmbed>
     </ContentBox>
   </div>
