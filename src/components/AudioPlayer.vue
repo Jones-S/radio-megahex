@@ -2,7 +2,7 @@
   <div class="AudioPlayer">
     <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
-        <span ref="ticker" class="AudioPlayer__text">Dieses Radio ist noch nicht auf Sendung!!! Bald gibt's hier jedoch was zu sehen, respektive zu hören. Bis dahin, schön zuhause bleiben.</span>
+        <span ref="ticker" class="AudioPlayer__text">{{ program }}</span>
         <span v-show="overflowing" class="AudioPlayer__dots">...</span>
       </div>
     </div>
@@ -30,6 +30,11 @@ export default {
       type: String,
       required: true,
       default: ''
+    },
+    program: {
+      type: String,
+      required: true,
+      default: 'Radio megahex.fm'
     },
   },
   data() {

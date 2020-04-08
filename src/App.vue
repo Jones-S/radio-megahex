@@ -1,24 +1,34 @@
 <template>
   <div id="app" :class="['App']">
     <Heading class="Heading" :level="1">megahex.fm</Heading>
-    <AudioPlayer :src="src"></AudioPlayer>
-    <router-view />
+    <AudioPlayer :src="src" :program="program"></AudioPlayer>
+    <TwitchEmbed></TwitchEmbed>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Heading from './components/Heading.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
+import TwitchEmbed from './components/TwitchEmbed.vue'
 
 export default {
   name: 'app',
   components: {
-    Heading,
-    AudioPlayer
+    AudioPlayer,
+    TwitchEmbed,
+    Heading
   },
   data: () => {
     return {
       src: 'https://zzz.megahex.fm:8001/listen?type=.mp3'
+    }
+  },
+  computed: {
+    ...mapGetters('data', ['page']),
+    program() {
+      if (!this.page || !this.page.content || !this.page.content.text) return '...'
+      return 'avlhelh'
     }
   },
   metaInfo:() => {
@@ -35,7 +45,7 @@ export default {
         { property: 'og:image', content: ogImageUrl },
         { name: 'og:image:width', content: 1080 },
         { name: 'og:image:height', content: 724 },
-        { name: 'og:image:alt', content: 'CovidNames – CodeNames Spiel' }
+        { name: 'og:image:alt', content: 'Megahex.fm – Internetradio vom Feinsten' }
       ]
     }
   },
