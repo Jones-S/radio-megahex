@@ -19,7 +19,10 @@ const actions = {
       dispatch
     }, payload) {
     commit('SET_LOADING')
-    const path = removeTrailingSlash(removeLeadingSlash(payload.path))
+    let path = removeTrailingSlash(removeLeadingSlash(payload.path))
+    if (!path) {
+      path = config.homeSlug
+    }
     const pageInStore = state.pages.find(p => p.slug === path)
 
     // check if page already is in store
