@@ -50,4 +50,16 @@ export default {
       text-decoration: underline;
     }
   }
+
+  .is-inverted {
+    .#{$c} {
+      a {
+        color: $s-color-white;
+
+        &:hover {
+          @include reset-link;
+        }
+      }
+    }
+  }
 </style>
