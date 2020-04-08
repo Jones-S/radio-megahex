@@ -18,7 +18,7 @@ $s-font-family-base: 'Cygnito-Mono', sans-serif;
 
 /* Font-Sizes */
 $s-fz-14: 1.4rem;
-$s-fz-18: 1.8rem;
+$s-fz-19: 1.9rem;
 $s-fz-25: 2.5rem;
 $s-fz-30: 3rem;
 
@@ -38,8 +38,8 @@ $s-size-spacer-medium: $s-size-spacer-small * 2;
 // $s-size-spacer-huge: $s-size-spacer-small * 6;
 // $s-size-spacer-giant:
 
-$s-size-gutter-small: $s-size-spacer-small;
-$s-size-gutter-medium: $s-size-gutter-small * 2;
+$s-size-gutter-small: 0.3rem;
+$s-size-gutter-medium: 0.7rem;
 $s-size-gutter-large: $s-size-gutter-small * 4;
 
 
@@ -47,13 +47,8 @@ $s-size-gutter-large: $s-size-gutter-small * 4;
  * Settings – Specific sizes
  */
 
-$s-the-header-bar-height-small: 70px;
-$s-the-header-bar-height: 5.4rem;
+ $s-box-distance: 0.4rem;
 
-$s-card-size: 18.5rem;
-$s-card-spacer-mobile: 1rem;
-$s-card-spacer: $s-size-spacer-small;
-$s-icon-size: 3rem;
 
 /*
  * Settings – Animations
@@ -79,10 +74,9 @@ $s-size-breakpoint-large: 1450px;
 $s-size-breakpoint-huge: 1920px;
 $s-size-breakpoint-giant: 2200px;
 
-// $s-size-content-max-width-small: $s-fz-medium * 30; // 600px = 20px * 30em (don't make paragraphs too wide!)
-// $s-size-content-max-width-medium: 1100px;
-// $s-size-content-max-width-large: 1440px;
-$s-size-content-max-width-large: 5 * $s-card-size + 5 * $s-size-spacer-small + 4 * $s-card-spacer;
+$s-size-content-max-width-small: $s-fz-19 * 30; // 600px = 20px * 30em (don't make paragraphs too wide!)
+$s-size-content-max-width-medium: 1100px;
+$s-size-content-max-width-large: 1440px;
 
 /*
  * Settings – z-Index

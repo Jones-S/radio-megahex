@@ -41,13 +41,13 @@
   letter-spacing: normal;
   
   @include mq($from: medium) {
-    font-size: $s-fz-18;
+    font-size: $s-fz-19;
   }
 }
 
 @mixin font-style-heading-base {
   @include font-style-base;
-  font-size: $s-fz-18;
+  font-size: $s-fz-19;
   
   @include mq($from: medium) {
     font-size: $s-fz-30;

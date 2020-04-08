@@ -10,8 +10,15 @@
       <source :src="src" type="audio/mpeg">      
       Sorry, your browser does not support the audio tag
     </audio>
-    <button :class="['AudioPlayer__button', playing ? 'AudioPlayer__button--stop' : 'AudioPlayer__button--play']" @click="playing ? stop() : play()">Play</button>
-    <button class="AudioPlayer__button AudioPlayer__button--volume" @click="increaseVolume">Adjust volume</button>
+    <div class="AudioPlayer__controls">
+      <button :class="['AudioPlayer__button', playing ? 'AudioPlayer__button--stop' : 'AudioPlayer__button--play']" @click="playing ? stop() : play()">Play</button>
+      <button class="AudioPlayer__button AudioPlayer__button--volume">
+        Adjust volume
+        <div class="AudioPlayer__range-wrapper">
+          <input type="range" v-model="volume" @change="adjustVolume" />
+        </div>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -27,6 +34,8 @@ export default {
   },
   data() {
     return {
+      volume: 80, // initial volume
+      showVolume: false,
       playing: false,
       tickerPosition: 0,
       deltaWrapperTextWidth: false,
@@ -38,6 +47,9 @@ export default {
     // calculate amount of pixel difference between text and wrapper == how much we have to translate text to actually see the end...
     this.deltaWrapperTextWidth = this.$refs.wrapper.clientWidth - this.$refs.ticker.clientWidth
 
+    // set initial volume
+    this.$refs.audio.volumne = this.volume
+
     // start animation if text is longer than wrapper
     if (this.deltaWrapperTextWidth < 0) {
       // set ... to indicate that there is more text
@@ -45,8 +57,8 @@ export default {
 
       setTimeout(() => {
         // wait 3s before startin animation
-        window.requestAnimationFrame(this.animate);
-      }, 3000);
+        window.requestAnimationFrame(this.animate)
+      }, 3000)
     }
   },
   methods: {
@@ -58,13 +70,18 @@ export default {
       this.$refs.audio.pause()
       this.playing = false
     },
-    increaseVolume() {
-      console.log('this.$refs.audio.volume: ', this.$refs.audio.volume)
-      this.$refs.audio.volume = this.$refs.audio.volume - 0.05
+    showVolumeRange() {
+      this.showVolume = true
+    },
+    hideVolumeRange() {
+      this.showVolume = false
+    },
+    adjustVolume() {
+      this.$refs.audio.volume = (this.volume / 100)
     },
     animate() {
       this.$refs.ticker.style.transform =`translateX(${this.tickerPosition}px)`
-      const nextIteration = this.tickerPosition -= this.tickerStep;
+      const nextIteration = this.tickerPosition -= this.tickerStep
       this.tickerPosition = this.tickerPosition <= this.deltaWrapperTextWidth ? 0 : nextIteration
       window.requestAnimationFrame(this.animate)
     }
@@ -86,10 +103,11 @@ export default {
       padding: 0 0.3rem;
       height: $c-audioplayer-text-wrapper-size;
       width: 100%;
-      max-width: 1000px;
+      max-width: calc(100% - #{$s-size-gutter-medium});
       border: 1px solid $s-color-black;
       position: relative;
-
+      margin-bottom: $s-box-distance;
+      
       &--overflowing {
         padding-right: 3.3rem;
       }
@@ -115,6 +133,11 @@ export default {
       right: 0.3rem;
     }
 
+    &__controls {
+      margin: 0 $s-box-distance $s-box-distance 0;
+      display: flex;
+    }
+
     &__button {
       @include reset-button;
       display: inline-block;
@@ -125,6 +148,9 @@ export default {
       background-image: url('~@/assets/icon/play.svg');
       background-repeat: no-repeat;
       background-position: center center;
+      margin-right: $s-box-distance;
+      flex: 0 0 auto;
+      position: relative;
       
       &:hover {
         background-color: $s-color-primary;
@@ -137,6 +163,66 @@ export default {
       &--stop {
         background-image: url('~@/assets/icon/stop.svg');
       }
+    }
+
+    &__button--volume {
+      &:hover {
+        .#{$c}__range-wrapper {
+          display: flex;
+        }
+      }
+    }
+
+    &__range-wrapper {
+      height: $c-audioplayer-button-size;
+      border: 1px solid $s-color-black;
+      padding: 1rem;
+      display: none;
+      margin: 0 $s-box-distance $s-box-distance 0;
+      flex: 0 1 auto;
+      position: absolute;
+      left: calc(#{$c-audioplayer-button-size} - 2px);
+      top: -1px;
+    }
+
+    input[type=range] {
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      border: 1px solid #000000;
+      height: 3rem;
+      width: 16px;
+      border-radius: 0;
+      background: #ffffff;
+      cursor: pointer;
+      margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    }
+
+    /* All the same stuff for Firefox */
+    input[type=range]::-moz-range-thumb {
+      border: 1px solid #000000;
+      height: 3rem;
+      width: 16px;
+      border-radius: 0;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 0.1rem;
+      cursor: pointer;
+      border-radius: 0;
+      background-color: $s-color-black;
+    }
+
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 0.1rem;
+      cursor: pointer;
+      border-radius: 0;
+      background-color: $s-color-black;
     }
   }
 </style>
