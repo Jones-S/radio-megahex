@@ -2,7 +2,7 @@
   <div id="app" :class="['App']">
     <Heading class="Heading" :level="1">megahex.fm</Heading>
     <AudioPlayer :src="src" :program="program"></AudioPlayer>
-    <TwitchEmbed></TwitchEmbed>
+    <router-view />
   </div>
 </template>
 
@@ -10,13 +10,11 @@
 import { mapGetters } from 'vuex'
 import Heading from './components/Heading.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
-import TwitchEmbed from './components/TwitchEmbed.vue'
 
 export default {
   name: 'app',
   components: {
     AudioPlayer,
-    TwitchEmbed,
     Heading
   },
   data: () => {
@@ -27,8 +25,8 @@ export default {
   computed: {
     ...mapGetters('data', ['page']),
     program() {
-      if (!this.page || !this.page.content || !this.page.content.text) return '...'
-      return 'avlhelh'
+      if (!this.page || !this.page.content || !this.page.content.broadcast) return '...'
+      return this.page.content.broadcast
     }
   },
   metaInfo:() => {
