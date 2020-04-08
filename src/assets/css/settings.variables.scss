@@ -7,7 +7,8 @@
  * Settings – Variables
  */
 
-$s-font-family-base: 'Cygnito-Mono', sans-serif;
+$s-font-family-base: 'Megahex', sans-serif;
+$s-font-family-extra: 'Cygnito-Mono', monospace, monospace; // https://stackoverflow.com/questions/38781089/font-family-monospace-monospace
 
 
 /*$s-fz-25
@@ -47,7 +48,8 @@ $s-size-gutter-large: $s-size-gutter-small * 4;
  * Settings – Specific sizes
  */
 
- $s-box-distance: 0.4rem;
+$s-box-distance: 0.4rem;
+$s-box-margin: 3rem;
 
 
 /*

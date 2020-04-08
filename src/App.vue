@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="['App']">
-    <Heading class="Heading" :level="1">megahex.fm</Heading>
+    <Logo />
     <AudioPlayer :src="src" :program="program"></AudioPlayer>
     <router-view />
   </div>
@@ -9,12 +9,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import Heading from './components/Heading.vue'
+import Logo from './components/Logo.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
 
 export default {
   name: 'app',
   components: {
     AudioPlayer,
+    Logo,
     Heading
   },
   data: () => {
@@ -30,7 +32,7 @@ export default {
     }
   },
   metaInfo:() => {
-    const ogImageUrl = require('@/assets/covidnames_og.jpg');
+    const ogImageUrl = require('@/assets/og_image.jpg');
     return {
       title: 'Radio Megahex',
       htmlAttrs: {
@@ -38,11 +40,11 @@ export default {
       },
       meta: [
         { charset: 'utf-8' },
-        { name: 'description', content: 'Radio Megahex!!' },
+        { name: 'description', content: 'Megahex.fm – Internetradio vom Feinsten' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { property: 'og:image', content: ogImageUrl },
-        { name: 'og:image:width', content: 1080 },
-        { name: 'og:image:height', content: 724 },
+        { name: 'og:image:width', content: 642 },
+        { name: 'og:image:height', content: 640 },
         { name: 'og:image:alt', content: 'Megahex.fm – Internetradio vom Feinsten' }
       ]
     }
