@@ -1,4 +1,4 @@
-# covidnames
+# Megahex.fm
 
 ## Project setup
 ```
