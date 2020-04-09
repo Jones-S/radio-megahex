@@ -1,18 +1,23 @@
 <template>
   <div class="TwitchEmbed" id="twitch-embed">
-    <vue-twitch-player
-      :channel="channel"
-    ></vue-twitch-player>
+    <div ref="player"></div>
   </div>
 </template>
 
 <script>
-import VueTwitchPlayer from 'vue-twitch-player'
+import Vue from 'vue';
+import LoadScript from 'vue-plugin-load-script';
+Vue.use(LoadScript);
+
+let player
 
 export default {
   name: 'TwitchEmbed',
-  components: {
-    VueTwitchPlayer
+  data() {
+    return {
+      width: '100%',
+      height: 1000
+    }
   },
   props: {
     channel: {
@@ -21,7 +26,30 @@ export default {
       default: ''
     },
   },
+  beforeCreate() {
+    Vue.loadScript('https://embed.twitch.tv/embed/v1.js')
+      .then(() => {
+        const options = {
+          width: this.width,
+          height: this.height,
+        }
+        if (this.channel) {
+          options.channel = this.channel
+        }
+        player = new window.Twitch.Embed(this.$refs.player, options)
 
+        player.addEventListener('ended', () => (this.$emit('ended')));
+        player.addEventListener('pause', () => (this.$emit('pause')));
+        player.addEventListener('play', () => (this.$emit('play')));
+        player.addEventListener('offline', () => (this.$emit('offline')));
+        player.addEventListener('online', () => (this.$emit('online')));
+        player.addEventListener('ready', () => {
+          player.setQuality(this.quality);
+          player.setVolume(this.volume);
+          this.$emit('ready');
+        });
+      }).catch((e) => (this.$emit('error', e)));
+    },
 }
 </script>
 
