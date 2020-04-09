@@ -9,8 +9,6 @@ import Vue from 'vue';
 import LoadScript from 'vue-plugin-load-script';
 Vue.use(LoadScript);
 
-let player
-
 export default {
   name: 'TwitchEmbed',
   data() {
@@ -36,18 +34,7 @@ export default {
         if (this.channel) {
           options.channel = this.channel
         }
-        player = new window.Twitch.Embed(this.$refs.player, options)
-
-        player.addEventListener('ended', () => (this.$emit('ended')));
-        player.addEventListener('pause', () => (this.$emit('pause')));
-        player.addEventListener('play', () => (this.$emit('play')));
-        player.addEventListener('offline', () => (this.$emit('offline')));
-        player.addEventListener('online', () => (this.$emit('online')));
-        player.addEventListener('ready', () => {
-          player.setQuality(this.quality);
-          player.setVolume(this.volume);
-          this.$emit('ready');
-        });
+        new window.Twitch.Embed(this.$refs.player, options)
       }).catch((e) => (this.$emit('error', e)));
     },
 }
