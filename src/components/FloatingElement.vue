@@ -8,7 +8,7 @@
       :x="initialXPosition"
       :y="initialYPosition"
       :z="zIndex"
-      :aspectRatio="keepAspectRatio"
+      :aspectRatio="true"
       :isDraggable="true"
       @resizing="resize"
       @dragging="resize"
@@ -17,7 +17,7 @@
       :sticks="['tr','tl','bl','br']"
       class="FloatingElement__drag-box"
     >
-      <div v-if="src" class="FloatingElement__content">
+      <div class="FloatingElement__content">
         <button class="FloatingElement__button" @click="destroy">Close
           <div class="FloatingElement__border">
             <div class="FloatingElement__bar"></div>
@@ -25,7 +25,8 @@
           </div>
         </button>
         <div class="FloatingElement__img-wrap">
-          <div v-if="src" class="FloatingElement__img" :style="`background-color: ${imageBackgroundColor}; background-image: url('${src}');`" />
+          <slot></slot>
+          <!-- <div v-if="src" class="FloatingElement__img" :style="`background-color: ${imageBackgroundColor}; background-image: url('${src}');`" /> -->
         </div>
       </div>
     </VueDragResize>
@@ -36,52 +37,29 @@
 import Vue from 'vue'
 import VueDragResize from 'vue-drag-resize'
 Vue.component('vue-drag-resize', VueDragResize)
-
-
-/**
- * Returns a random integer between min (inclusive) and max (inclusive).
- * The value is no lower than min (or the next integer greater than min
- * if min isn't an integer) and no greater than max (or the next integer
- * lower than max if max isn't an integer).
- * Using Math.round() will give you a non-uniform distribution!
- */
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const onload2promise = (img) => {
-  return new Promise((resolve, reject) => {
-    img.onload = () => resolve(img)
-    img.onerror = reject
-  })
-}
-
-const addImageProcess = async (src) => {
-  let img = new Image()
-  let imgPromise = onload2promise(img)
-  img.src = src
-  await imgPromise
-  const { height, width } = img
-  return { height, width }
-}
+import { draggableImageHelper } from '../mixins/helpers'
 
 export default {
   name: 'FloatingElement',
   components: {
     VueDragResize
   },
+  mixins: [draggableImageHelper],
   props: {
     src: {
       type: String,
-      required: true,
+      required: false,
       default: ''
     },
     alt: {
       type: String,
-      required: true,
+      required: false,
       default: ''
+    },
+    options: {
+      type: Object,
+      required: false,
+      default: () => {}
     },
     imageBackgroundColor: {
       type: String,
@@ -91,6 +69,7 @@ export default {
   },
   data() {
     return {
+      ready: false,
       initialWidth: false,
       initialHeight: false,
       initialXPosition: false,
@@ -101,53 +80,34 @@ export default {
       left: 0,
       zIndex: 10,
       isActive: false,
-      keepAspectRatio: true,
       documentWidth: false,
       documentHeight: false,
       distanceToTop: 150 // relatively random
     }
   },
-  computed: {
-    ready() {
-      return this.initialWidth && this.initialHeight && this.initialXPosition && this.initialYPosition
-    }
-  },
   async mounted() {
-    await this.setInitialSize()
-    this.setInitialPosition()
+    // if we have an image we need to calculate the image size
+    if (this.src) {
+      const initialSize = await this.setInitialSize(this.src)
+      this.initialWidth = initialSize.initialWidth
+      this.initialHeight = initialSize.initialHeight
+      const initialPosition = this.setInitialPosition(this.initialWidth, this.initialHeight, this.distanceToTop)
+      this.initialXPosition = initialPosition.x
+      this.initialYPosition = initialPosition.y
+      this.ready = true
+    } else {
+      console.log('this.options: ', this.options)
+      this.initialWidth = this.options && this.options.width ? this.options.width : 100,
+      this.initialHeight = this.options && this.options.height ? this.options.height : 100,
+      this.initialXPosition = this.options && this.options.xPos ? this.options.xPos : 100,
+      this.initialYPosition = this.options && this.options.yPos ? this.options.yPos : 100,
+      this.ready = true
+    }
   },
 beforeDestroy () {
   this.$el.parentNode.removeChild(this.$el)
 },
   methods: {
-    async setInitialSize() {
-      // Create image programmatically (use promises to use async await)
-      const imageDimensions = await addImageProcess(this.src)
-
-      // create initial size
-      const aspectRatio = imageDimensions.width / imageDimensions.height
-
-      this.documentWidth = document.body.clientWidth
-      this.documentHeight = document.body.clientHeight
-      const browserHeight = window.innerHeight
-
-      const smallerWindowSideSize = this.documentWidth > browserHeight ? browserHeight : this.documentWidth
-
-      // determine width of screen, to not create images bigger than a fraction of the smaller browser side
-      const maxWidth = smallerWindowSideSize / 3
-
-      // set initial size
-      this.initialWidth = getRandomInt(150, maxWidth)
-      this.initialHeight = this.initialWidth / aspectRatio
-    },
-    setInitialPosition() {
-      const maxXPosition = this.documentWidth - this.initialWidth
-      this.initialXPosition = getRandomInt(1, maxXPosition)
-
-      let maxYPosition = this.documentHeight - this.initialHeight
-      maxYPosition = maxYPosition > this.distanceToTop && maxYPosition >= 0 ? maxYPosition : this.distanceToTop
-      this.initialYPosition = getRandomInt(this.distanceToTop, maxYPosition)
-    },
     resize(newRect) {
       this.width = newRect.width;
       this.height = newRect.height;
@@ -159,7 +119,6 @@ beforeDestroy () {
       this.zIndex = 100
     },
     deactivate() {
-      console.log('deactivate')
       this.isActive = false
     },
     destroy() {
@@ -244,5 +203,15 @@ beforeDestroy () {
         left: 0;
       }
     }
+  }
+
+  // Overriding scoped child components with /deep/
+  // https://bambielli.com/til/2018-08-19-how-to-target-child-components-with-scoped-css-in-vue/
+  /deep/ .Paragraph {
+    padding: $s-box-distance;
+    padding-top: 2rem;
+    background-color: $s-color-white;
+    border: 1px solid $s-color-black;
+    height: 100%;
   }
 </style>

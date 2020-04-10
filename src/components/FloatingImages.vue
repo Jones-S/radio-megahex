@@ -1,9 +1,14 @@
 <template>
   <div class="FloatingImages">
     <v-breakpoint>
-      <div slot-scope="scope">
+      <div slot-scope="scope" v-if="scope.viewportWidth">
         <div v-if="scope.viewportWidth > 800">
-          <FloatingElement v-for="(image, index) in images" :key="index" :src="image.url" :alt="'megahex'" />
+          <FloatingElement v-for="(image, index) in images" :key="index" :src="image.url">
+            <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
+          </FloatingElement>
+          <FloatingElement :options="{ width: 300, height: 400 }">
+            <Paragraph :content="'Ein Text ist nicht zu verachten, mein Junge'"/>
+          </FloatingElement>
         </div>
         <div v-else>
           <ColoredImage v-for="(image, index) in images" :key="index" :src-set="image.srcset" :alt="'megahex'" />
@@ -17,10 +22,12 @@
 import { VBreakpoint } from 'vue-breakpoint-component'
 import FloatingElement from './FloatingElement.vue'
 import ColoredImage from './ColoredImage.vue'
+import Paragraph from './Paragraph.vue'
 
 export default {
   name: 'FloatingImages',
   components: {
+    Paragraph,
     ColoredImage,
     FloatingElement,
     VBreakpoint
@@ -31,9 +38,6 @@ export default {
       required: true,
       default: () => []
     }
-  },
-  mounted() {
-    // console.log('images: ', this.images)
   }
 }
 </script>
