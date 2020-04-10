@@ -5,6 +5,7 @@
         <Heading :level="2">{{ paragraph.title }}</Heading>
         <Paragraph v-if="paragraph.text" :content="paragraph.text"></Paragraph>
       </ContentBox>
+      <FloatingImages v-if="floatingImages" :images="floatingImages" />
     </div>
     <Loader v-else></Loader>
     <ContentBox v-if="channel">
@@ -20,13 +21,14 @@ import TwitchEmbed from '../components/TwitchEmbed.vue'
 import Loader from '../components/Loader.vue'
 import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
-
+import FloatingImages from '../components/FloatingImages.vue'
 
 export default {
   name: 'DefaultView',
   components: {
     Loader,
     TwitchEmbed,
+    FloatingImages,
     Paragraph,
     ContentBox,
     Heading
@@ -40,6 +42,10 @@ export default {
     channel() {
       if (!this.page || !this.page.content || !this.page.content.twitch_channel) return false
       return this.page.content.twitch_channel
+    },
+    floatingImages() {
+      if (!this.page || !this.page.content || !this.page.content.draggable_images) return false
+      return this.page.content.draggable_images
     }
   },
   watch: {
