@@ -179,6 +179,8 @@ beforeDestroy () {
   .#{$c} {
     &__drag-box {
       z-index: 10;
+      cursor: move; /* fallback if grab cursor is unsupported */
+      cursor: grab;
 
       &--is-active {
         z-index: 20;

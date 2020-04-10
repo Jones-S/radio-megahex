@@ -4,7 +4,7 @@ export const kirbyTagsHelper = {
 			// Inspired by: https://github.com/Chalarangelo/parse-md-js/blob/master/parsemd.js
 			const boldItalicsRegex = /(\*{1,2})(.*?)\1/g
 			// https://regex101.com/r/9y3XU0/2
-			const linkRegex = /\(link:\ (.+)\ text: (.[^\)]+)\)/g
+			const linkRegex = /\(link:\ (.+)\ text: (.[^\)]+)\)/g // eslint-disable-line
 			const newLineRegex = /(?:\r\n|\r|\n)/g
 
 			const boldItalicsReplacer = (fullMatch, tagStart, tagContents) => {

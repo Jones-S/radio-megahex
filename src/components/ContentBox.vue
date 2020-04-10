@@ -27,7 +27,7 @@ export default {
     padding: $s-box-distance * 5 $s-box-distance * 2 $s-box-distance * 2;
     width: span(12 of 12);
     margin: 0 auto;
-    margin-top: $s-box-margin;
+    margin-bottom: $s-box-margin;
 
     // &::after {
     //   display: inline;

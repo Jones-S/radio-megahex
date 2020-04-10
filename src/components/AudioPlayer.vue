@@ -104,6 +104,7 @@ export default {
 
   .#{$c} {
     @include font-style-extra;
+    margin-bottom: $s-box-margin;
 
     &__textbox {
       padding: 0 0.3rem;
