@@ -18,8 +18,15 @@
       class="FloatingElement__drag-box"
     >
       <div v-if="src" class="FloatingElement__content">
-        <button class="FloatingElement__button" @click="destroy">Close</button>
-        <img v-if="src" :src="src" :alt="alt" />
+        <button class="FloatingElement__button" @click="destroy">Close
+          <div class="FloatingElement__border">
+            <div class="FloatingElement__bar"></div>
+            <div class="FloatingElement__bar FloatingElement__bar--left"></div>
+          </div>
+        </button>
+        <div class="FloatingElement__img-wrap">
+          <div v-if="src" class="FloatingElement__img" :style="`background-color: ${imageBackgroundColor}; background-image: url('${src}');`" />
+        </div>
       </div>
     </VueDragResize>
   </div>
@@ -75,6 +82,11 @@ export default {
       type: String,
       required: true,
       default: ''
+    },
+    imageBackgroundColor: {
+      type: String,
+      required: false,
+      default: '#df4f41'
     }
   },
   data() {
@@ -161,6 +173,8 @@ beforeDestroy () {
   @import '@/assets/css/global';
   $c: 'FloatingElement';
 
+  $c-floating-element-button-size: 3.5rem;
+
   .#{$c} {
     &__drag-box {
       z-index: 10;
@@ -175,11 +189,57 @@ beforeDestroy () {
       display: inline-block;
       position: absolute;
       z-index: 2;
-      background-color: #fff;
+      padding: 0;
+      text-indent: -9999px;
+      width: auto;
+      right: $c-floating-element-button-size;
+      top: -  ($c-floating-element-button-size - 0.5rem);
     }
 
-    img {
+    &__content,
+    &__img-wrap {
+      max-width: 100%;
+      max-height: 100%;
       width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    &__img {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      background-blend-mode: hard-light;
+      mix-blend-mode: multiply;
+      display: block;
+      position: absolute;
+      background-size: cover;
+    }
+
+    &__border {
+      width: $c-floating-element-button-size;
+      height: $c-floating-element-button-size;
+      background-color: $s-color-white;
+      border: 1px solid $s-color-black;
+      position: absolute;
+      right: 0;
+    }
+
+    &__bar {
+      height: $c-floating-element-button-size + 1.1rem; // optical pythagoras
+      width: 1px;
+      background-color: $s-color-black;
+      transform-origin: top left;
+      transform: rotate(45deg);
+      Z-index: 1;
+      position: absolute;
+      right: 0;
+
+      &--left {
+        transform: rotate(-45deg);
+        left: 0;
+      }
     }
   }
 </style>
