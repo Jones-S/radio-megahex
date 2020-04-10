@@ -2,7 +2,7 @@
   <div class="AudioPlayer">
     <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
-        <span ref="ticker" class="AudioPlayer__text">{{ program }}</span>
+        <span ref="ticker" class="AudioPlayer__text" v-html="program" />
         <span v-show="overflowing" class="AudioPlayer__dots">...</span>
       </div>
     </div>

@@ -46,6 +46,8 @@ const actions = {
         if (response.status === 200 && response.data && response.data.data) {
           const page = response.data.data
           return page
+        } else {
+          console.warn('response: ', response) // eslint-disable-line
         }
       }, (err) => {
         console.error(err) // eslint-disable-line

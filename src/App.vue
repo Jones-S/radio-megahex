@@ -8,7 +8,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Heading from './components/Heading.vue'
 import Logo from './components/Logo.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
 
@@ -16,8 +15,7 @@ export default {
   name: 'app',
   components: {
     AudioPlayer,
-    Logo,
-    Heading
+    Logo
   },
   data: () => {
     return {

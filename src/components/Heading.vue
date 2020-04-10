@@ -1,4 +1,12 @@
 <script>
+const getChildrenTextContent = children => {
+  return children
+    .map(node => {
+      return node.children ? getChildrenTextContent(node.children) : node.text
+    })
+    .join('')
+}
+
 export default {
   name: 'Heading',
   props: {
@@ -27,9 +35,10 @@ export default {
             class: {
               Heading__content: true
             },
-          },
-
-          this.$slots.default,
+            domProps: {
+              innerHTML: getChildrenTextContent(this.$slots.default)
+            }
+          }
         )
       ]
     )
