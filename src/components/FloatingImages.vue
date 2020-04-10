@@ -1,16 +1,16 @@
 <template>
   <div class="FloatingImages">
-    <FloatingImage v-for="(image, index) in images" :key="index" :src="image.url" :alt="'megahex'" />
+    <FloatingElement v-for="(image, index) in images" :key="index" :src="image.url" :alt="'megahex'" />
   </div>
 </template>
 
 <script>
-import FloatingImage from './FloatingImage.vue'
+import FloatingElement from './FloatingElement.vue'
 
 export default {
   name: 'FloatingImages',
   components: {
-    FloatingImage
+    FloatingElement
   },
   props: {
     images: {
@@ -20,7 +20,7 @@ export default {
     }
   },
   mounted() {
-    console.log('images: ', this.images)
+    // console.log('images: ', this.images)
   }
 }
 </script>
