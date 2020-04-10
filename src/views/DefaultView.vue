@@ -1,7 +1,13 @@
 <template>
   <div class="DefaultView">
     <div v-if="page">
-      <ContentBox v-for="(paragraph, index) in paragraphs" :key="index" :inverted="!!paragraph.inverted" :columns="susyColumns">
+      <ContentBox
+        v-for="(paragraph, index) in paragraphs"
+        :key="index"
+        :inverted="!!paragraph.inverted"
+        :columns="susyColumns(minCol, maxCol)"
+        :no-line="index === paragraphs.length - 1"
+      >
         <Heading :level="2">{{ paragraph.title }}</Heading>
         <Paragraph v-if="paragraph.text" :content="paragraph.text"></Paragraph>
       </ContentBox>
@@ -35,6 +41,12 @@ export default {
     Heading
   },
   mixins: [connectionLineHelper],
+  data: () => {
+    return {
+      minCol: 7,
+      maxCol: 12
+    }
+  },
   computed: {
     ...mapGetters('data', ['page']),
     paragraphs() {

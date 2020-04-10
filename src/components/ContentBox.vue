@@ -2,7 +2,10 @@
   <div class="ContentBox">
     <div ref="box" :class="['ContentBox__box', { 'is-inverted' : inverted }, `ContentBox__box--susy-cols-${columns}`]">
       <slot></slot>
-      <div :class="['ContentBox__line', `ContentBox__line--susy-cols-${columns}`]" :style="`left: ${offset}`"></div>
+      <div v-if="!noLine" :class="['ContentBox__line-wrap']" :style="`left: ${offset}`">
+        <div class="ContentBox__line" />
+        <div :class="['ContentBox__line', 'ContentBox__line--horizontal', direction]" :style="`height: ${horizontalLineLength}`"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,17 +26,29 @@ export default {
       type: Number,
       required: false,
       default: 10
+    },
+    noLine: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data: () => {
     return {
-      offset: 0
+      offset: 0,
+      direction: false,
+      horizontalLineLength: 0
     }
   },
   mounted() {
     const boxWidth = this.$refs.box.clientWidth
+    const offset = getRandomInt(0, boxWidth)
     // then calculate max offset
-    this.offset = `${getRandomInt(0, boxWidth)}px`
+    this.offset = `${offset}px`
+    this.direction = offset / boxWidth < 0.5 ? 'to-right' : 'to-left';
+    // distance from offset to middle of box (assuming that the middle of the box is always overlapping)
+    const horizontalLineLength = Math.abs((boxWidth / 2) - offset)
+    this.horizontalLineLength = `${horizontalLineLength}px`
   }
 }
 </script>
@@ -47,6 +62,7 @@ export default {
     margin-bottom: $s-box-margin;
 
     &__box {
+      background-color: $s-color-white;
       border: 1px solid $s-color-black;
       padding: $s-box-distance * 5 $s-box-distance * 2 $s-box-distance * 2;
       width: span(12 of 12);
@@ -95,13 +111,33 @@ export default {
       }
     }
 
+    &__line-wrap {
+      background-color: yellow;
+      position: absolute;
+      bottom: -1px;
+      height: 1px; // is somehow needed to not be randomly placed on the screen... :S
+    }
+
     &__line {
+      position: absolute;
       width: 1px;
       background-color: $s-color-black;
-      height: $s-box-margin + 0.2rem;
-      position: absolute;
-      bottom: -$s-box-margin - 0.2rem;
-      transition: left $s-animation-duration-default;
+      height: $s-box-margin + 0.9rem;
+
+      &--horizontal {
+        height: 1px; // calculated by javascript (is actually the length, because of the rotation)
+        transform-origin: top left;
+        top: $s-box-margin + 0.9rem;
+
+        &.to-left {
+          transform-origin: top right;
+          transform: rotate(90deg);
+        }
+
+        &.to-right {
+          transform: rotate(-90deg);
+        }
+      }
     }
   }
 </style>

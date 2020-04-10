@@ -26,9 +26,9 @@ export const kirbyTagsHelper = {
 }
 
 export const connectionLineHelper = {
-	computed: {
-		susyColumns() {
-      return getRandomInt(7, 12)
+	methods: {
+		susyColumns(min, max) {
+      return getRandomInt(min, max)
     }
 	}
 }
