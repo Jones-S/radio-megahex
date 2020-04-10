@@ -1,7 +1,7 @@
 <template>
   <div class="DefaultView">
     <div v-if="page">
-      <ContentBox v-for="(paragraph, index) in paragraphs" :key="index" :inverted="!!paragraph.inverted">
+      <ContentBox v-for="(paragraph, index) in paragraphs" :key="index" :inverted="!!paragraph.inverted" :columns="susyColumns">
         <Heading :level="2">{{ paragraph.title }}</Heading>
         <Paragraph v-if="paragraph.text" :content="paragraph.text"></Paragraph>
       </ContentBox>
@@ -22,6 +22,7 @@ import Loader from '../components/Loader.vue'
 import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
+import { connectionLineHelper } from '../mixins/helpers'
 
 export default {
   name: 'DefaultView',
@@ -33,6 +34,7 @@ export default {
     ContentBox,
     Heading
   },
+  mixins: [connectionLineHelper],
   computed: {
     ...mapGetters('data', ['page']),
     paragraphs() {

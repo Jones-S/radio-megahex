@@ -16,7 +16,8 @@ export default {
   $c: 'Logo';
 
   .#{$c} {
-    @include font-style-heading-base;
+    font-size: 0;
+    line-height: 0;
 
     h1 {
       text-indent: -9999px;
@@ -25,7 +26,10 @@ export default {
 
     img {
       width: 25rem;
-      margin-bottom: 1rem;
+      margin-bottom: $s-box-distance;
+      border: 1px solid $s-color-black;
+      padding: 0.2rem;
+      display: block;
     }
   }
 </style>

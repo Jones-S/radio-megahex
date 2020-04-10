@@ -1,3 +1,5 @@
+import { getRandomInt } from '../utilities/helpers'
+
 export const kirbyTagsHelper = {
 	methods: {
 		convertKirbyTags(text) {
@@ -23,22 +25,17 @@ export const kirbyTagsHelper = {
 	}
 }
 
+export const connectionLineHelper = {
+	computed: {
+		susyColumns() {
+      return getRandomInt(7, 12)
+    }
+	}
+}
+
 export const draggableImageHelper = {
   methods: {
-    /**
-     * Returns a random integer between min (inclusive) and max (inclusive).
-     * The value is no lower than min (or the next integer greater than min
-     * if min isn't an integer) and no greater than max (or the next integer
-     * lower than max if max isn't an integer).
-     * Using Math.round() will give you a non-uniform distribution!
-     */
-    getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
     async setInitialSize(src) {
-      console.log('src: ', src)
       // Create image programmatically (use promises to use async await)
       const imageDimensions = await this.addImageProcess(src)
 
@@ -54,7 +51,7 @@ export const draggableImageHelper = {
       const maxWidth = smallerWindowSideSize / 3
 
       // set randomized initial size
-      const initialWidth = this.getRandomInt(150, maxWidth)
+      const initialWidth = getRandomInt(150, maxWidth)
       const initialHeight = initialWidth / aspectRatio
       return { initialWidth, initialHeight }
     },
@@ -79,11 +76,11 @@ export const draggableImageHelper = {
       const documentWidth = document.body.clientWidth
       const documentHeight = document.body.clientHeight
       const maxXPosition = documentWidth - imageInitialWidth
-      const initialXPosition = this.getRandomInt(1, maxXPosition)
+      const initialXPosition = getRandomInt(1, maxXPosition)
 
       let maxYPosition = documentHeight - imageInitialHeight
       maxYPosition = maxYPosition > minDistanceTotop && maxYPosition >= 0 ? maxYPosition : minDistanceTotop
-      const initialYPosition = this.getRandomInt(minDistanceTotop, maxYPosition)
+      const initialYPosition = getRandomInt(minDistanceTotop, maxYPosition)
 
       return { x: initialXPosition, y: initialYPosition }
     },
