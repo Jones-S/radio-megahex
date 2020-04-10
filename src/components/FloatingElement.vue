@@ -96,7 +96,6 @@ export default {
       this.initialYPosition = initialPosition.y
       this.ready = true
     } else {
-      console.log('this.options: ', this.options)
       this.initialWidth = this.options && this.options.width ? this.options.width : 100,
       this.initialHeight = this.options && this.options.height ? this.options.height : 100,
       this.initialXPosition = this.options && this.options.xPos ? this.options.xPos : 100,
@@ -213,5 +212,6 @@ beforeDestroy () {
     background-color: $s-color-white;
     border: 1px solid $s-color-black;
     height: 100%;
+    overflow-y: scroll;
   }
 </style>

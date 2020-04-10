@@ -6,9 +6,10 @@
           <FloatingElement v-for="(image, index) in images" :key="index" :src="image.url">
             <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
           </FloatingElement>
-          <FloatingElement :options="{ width: 300, height: 400 }">
-            <Paragraph :content="'Ein Text ist nicht zu verachten, mein Junge'"/>
-          </FloatingElement>
+          <!-- Proof of Concept for using any element as draggable item -->
+          <!-- <FloatingElement :options="{ width: 300, height: 250 }">
+            <Paragraph ref="paragraph" :content="'Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge'"/>
+          </FloatingElement> -->
         </div>
         <div v-else>
           <ColoredImage v-for="(image, index) in images" :key="index" :src-set="image.srcset" :alt="'megahex'" />
