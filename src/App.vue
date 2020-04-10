@@ -61,7 +61,7 @@ export default {
 $c: 'App';
 
 .#{$c} {
-  @include set-gutter('large');
+  @include set-gutter('medium');
   height: 100%;
   min-height: 100vh;
   transition: background-color $s-animation-duration-default;

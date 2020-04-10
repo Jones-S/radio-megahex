@@ -98,6 +98,33 @@ export default {
         }
       }
 
+      @include mq($from: large) {
+        &--susy-cols-7 {
+          width: span(5 of 12);
+          margin-left: span(2 of 12)
+        }
+        &--susy-cols-8 {
+          width: span(6 of 12);
+          margin-left: span(2 of 12)
+        }
+        &--susy-cols-9 {
+          width: span(7 of 12);
+          margin-left: span(2 of 12)
+        }
+        &--susy-cols-10 {
+          width: span(8 of 12);
+          margin-left: span(1 of 12)
+        }
+        &--susy-cols-11 {
+          width: span(9 of 12);
+          margin-left: 0;
+        }
+        &--susy-cols-12 {
+          width: span(10 of 12);
+          margin-left: 0;
+        }
+      }
+
       p {
         margin-bottom: 0;
       }
