@@ -159,6 +159,7 @@ beforeDestroy () {
       this.zIndex = 100
     },
     deactivate() {
+      console.log('deactivate')
       this.isActive = false
     },
     destroy() {
@@ -211,7 +212,7 @@ beforeDestroy () {
       max-width: 100%;
       max-height: 100%;
       background-blend-mode: hard-light;
-      mix-blend-mode: multiply;
+      // mix-blend-mode: multiply;
       display: block;
       position: absolute;
       background-size: cover;
