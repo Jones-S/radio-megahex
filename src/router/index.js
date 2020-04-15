@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import DefaultView from '../views/DefaultView'
-// import ArchiveView from '../views/ArchiveView'
+import ArchiveView from '../views/ArchiveView'
 
 Vue.use(VueRouter)
 
@@ -14,7 +14,7 @@ const routes = [
   {
     path: '/archive',
     name: 'archive',
-    component: DefaultView
+    component: ArchiveView
   },
   {
     path: '/*',

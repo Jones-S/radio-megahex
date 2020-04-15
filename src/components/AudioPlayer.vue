@@ -8,7 +8,7 @@
     </div>
     <audio ref="audio" countrols="controls">
       <source :src="src" type="audio/mpeg">
-      Sorry, your browser does not support the audio tag
+      Sorry, your browser does not support the audio tag.
     </audio>
     <div class="AudioPlayer__controls">
       <button :class="['AudioPlayer__button', playing ? 'AudioPlayer__button--stop' : 'AudioPlayer__button--play']" @click="playing ? stop() : play()">Play</button>

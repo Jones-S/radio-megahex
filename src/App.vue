@@ -8,6 +8,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import config from './config.js'
 import Logo from './components/Logo.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
 
@@ -19,7 +20,7 @@ export default {
   },
   data: () => {
     return {
-      src: 'https://zzz.megahex.fm:8001/listen?type=.mp3'
+      src: config.streamUrl
     }
   },
   computed: {
