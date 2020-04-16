@@ -4,10 +4,14 @@ import {
 } from '../utilities/helpers'
 import axios from 'axios'
 import config from '../config'
+import {
+  mergeArraysByValue
+} from '../utilities/helpers'
 
 const state = {
   pages: [],
   currentPage: false,
+  broadcasts: false,
   loading: true
 }
 
@@ -37,6 +41,109 @@ const actions = {
       commit('SAVE_PAGE_IN_STORE', page)
       commit('SET_LOADING_DONE')
     }
+  },
+  async fetchBroadCastData({ commit, state, dispatch}) {
+    if (!state.broadcasts) {
+      const broadcasts = await dispatch('fetchBroadCasts')
+      const broadcastsMeta = await dispatch('fetchbroadcastsMeta')
+
+      // first wait for the fetching promises to resolve
+      Promise.all([broadcasts, broadcastsMeta]).then(values => {
+        // and then wait for the mergeArray action to finish
+        // No idea why this returns a promise in the first place...
+        dispatch('mergeArrays', { broadcasts: values[0], meta: values[1] }).then((mergedArrays) => {
+          commit('SAVE_BROADCASTS', mergedArrays)
+        })
+      })
+    }
+  },
+  async fetchBroadCasts() {
+    return axios.get(config.recordingsUrl)
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+          return response.data
+        } else {
+          console.warn('response: ', response) // eslint-disable-line
+        }
+      }, (err) => {
+        console.error(err) // eslint-disable-line
+      })
+  },
+  async fetchbroadcastsMeta() {
+    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/archive` : `${config.apiBaseUrlRemote}/archive`
+
+    return axios.get(url)
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+          return response.data.archive_entries
+        } else {
+          console.warn('response: ', response) // eslint-disable-line
+        }
+      }, (err) => {
+        console.error(err) // eslint-disable-line
+      })
+  },
+  mergeArrays({}, { broadcasts, meta }) { // eslint-disable-line
+    const broadcastsArray = [{
+        'name': 'jones1.mp3',
+        'type': 'file',
+        'mtime': 'Thu, 07 Apr 2020 17:59:48 GMT',
+        'size': 286854928
+      },
+      {
+        'name': 'jones2.mp3',
+        'type': 'file',
+        'mtime': 'Thu, 09 Apr 2020 17:59:48 GMT',
+        'size': 286854928
+      },
+      ...broadcasts,
+      {
+        'name': 'jonesi.mp3',
+        'type': 'file',
+        'mtime': 'Thu, 09 Aug 2020 10:59:48 GMT',
+        'size': 286854928
+      },
+      {
+        'name': 'jones.mp3',
+        'type': 'file',
+        'mtime': 'Thu, 09 Dec 2021 10:59:48 GMT',
+        'size': 286854928
+      }
+    ]
+    const broadcastsMeta = [
+      ...meta,
+      {
+        "title": "Jones is in da House. Parganzi a longer title even go for itèè",
+        "file": "jones1.mp3",
+        "start_time": "14:00",
+        "end_time": "18:00"
+      },
+      {
+        "title": "Jones is in da House. Parganzi a longer title even go for ",
+        "file": "jones2.mp3",
+        "start_time": "14:00",
+        "end_time": "18:00"
+      },
+      {
+        "title": "Jones is in da House. Parganzi a longer title even go for 12",
+        "file": "jonesi.mp3",
+        "start_time": "14:00",
+        "end_time": "18:00"
+      },
+      {
+        "title": "Jones is in da House. Parganzi",
+        "file": "jones.mp3",
+        "start_time": "14:00",
+        "end_time": "18:00"
+      },
+    ]
+    const mergedArray = mergeArraysByValue(broadcastsArray, broadcastsMeta, 'name', 'file')
+
+    console.log('mergedArray: ', mergedArray)
+
+    // Filter those out which don't have any metadata
+    return mergedArray.filter(item => item.title)
+
   },
   async fetchPage({}, { slug }) { // eslint-disable-line
     const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/rest/pages/${slug}/` : `${config.apiBaseUrlRemote}/rest/pages/${slug}/`
@@ -68,6 +175,9 @@ const mutations = {
   },
   SAVE_PAGE_IN_STORE(state, page) {
     state.pages.push(page)
+  },
+  SAVE_BROADCASTS(state, data) {
+    state.broadcasts = data
   }
 }
 

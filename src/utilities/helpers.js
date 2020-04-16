@@ -78,16 +78,7 @@ export function mergeArraysByValue(array1, array2, key1, key2) {
 }
 
 /**
- *
- *
- * @param  {Array} array1 // First array
- * @param  {Array} array2 // Second array
- * @param  {string} key1 // Key of first array to union by
- * @param  {string} key2 // Key of second array to union by
- * @return {Array}
- *
- * @example
- *
+ * ES6 Map to array with key saved in 'name'
  */
 
 export function transformMapToArrayDeep(map) {
