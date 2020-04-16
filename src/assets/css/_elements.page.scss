@@ -17,6 +17,7 @@ html {
 }
 
 body {
+  @include font-style-base;
   min-height: 100%;
 }
 

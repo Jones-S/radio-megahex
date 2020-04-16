@@ -77,3 +77,41 @@ export function mergeArraysByValue(array1, array2, key1, key2) {
   return Array.from(mergedArray.values())
 }
 
+/**
+ *
+ *
+ * @param  {Array} array1 // First array
+ * @param  {Array} array2 // Second array
+ * @param  {string} key1 // Key of first array to union by
+ * @param  {string} key2 // Key of second array to union by
+ * @return {Array}
+ *
+ * @example
+ *
+ */
+
+export function transformMapToArrayDeep(map) {
+  const array = []
+
+  for (let [key, value] of map.entries()) {
+    let item
+
+    const isIterable = value ? typeof value[Symbol.iterator] === 'function' : false
+    if (isIterable) {
+      value = transformMapToArrayDeep(value)
+      item = {
+        name: key,
+        items: value
+      }
+    } else {
+      item = {
+        name: key,
+        ...value
+      }
+    }
+    array.push(item)
+  }
+
+  return array
+}
+
