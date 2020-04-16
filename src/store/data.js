@@ -39,7 +39,7 @@ const actions = {
     }
   },
   async fetchPage({}, { slug }) { // eslint-disable-line
-    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/pages/${slug}/` : `${config.apiBaseUrlRemote}/pages/${slug}/`
+    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/rest/pages/${slug}/` : `${config.apiBaseUrlRemote}/rest/pages/${slug}/`
 
     return axios.get(url)
       .then((response) => {

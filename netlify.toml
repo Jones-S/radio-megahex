@@ -2,13 +2,19 @@
   command = "yarn build"
   publish = "dist"
 
+# The following redirect is needed because of vue app's nature:
+# It only starts the app @ index.html, and we don't have a file `/*route*/index.html`
+# So we need to redirect and vue router will take over from there
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
+# Trying to fix CORS issues with axios – so far not working
+# Keeping this headers part as an example for the future
+
+# [[headers]]
+#   for = "/*"
+#   [headers.values]
+#     Access-Control-Allow-Origin = "*"
 

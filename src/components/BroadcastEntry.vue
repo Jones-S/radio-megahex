@@ -1,6 +1,8 @@
 <template>
   <div class="BroadcastEntry">
-    Item
+    {{ uri }},
+    {{ title }},
+    {{ file }}
   </div>
 </template>
 
@@ -8,10 +10,27 @@
 export default {
   name: 'BroadcastEntry',
   props: {
-    broadcasts: {
-      type: Array,
-      default: () => []
+    data: {
+      type: Object,
+      required: true
     }
+  },
+  computed: {
+    uri() {
+      return this.data.uri
+    },
+    title() {
+      return this.data.title
+    },
+    file() {
+      return this.data.file
+    },
+    startTime() {
+      return this.data.start_time
+    },
+    endTime() {
+      return this.data.end_time
+    },
   }
 }
 </script>
