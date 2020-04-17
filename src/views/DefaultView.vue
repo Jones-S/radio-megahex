@@ -17,6 +17,7 @@
     <ContentBox v-if="channel">
       <TwitchEmbed :channel="channel"></TwitchEmbed>
     </ContentBox>
+    <router-link to="/archive">ARchiv</router-link>
   </div>
 </template>
 
@@ -44,7 +45,7 @@ export default {
   data: () => {
     return {
       minCol: 7,
-      maxCol: 12
+      maxCol: 12,
     }
   },
   computed: {
@@ -70,6 +71,9 @@ export default {
   },
   created () {
     this.fetchData(this.$route)
+  },
+  mounted() {
+    this.$forceUpdate()
   },
   methods: {
     ...mapActions('data', ['fetchData']),

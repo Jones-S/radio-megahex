@@ -27,7 +27,13 @@ const actions = {
     if (!path) {
       path = config.homeSlug
     }
-    const pageInStore = state.pages.find(p => p.slug === path)
+
+    // kirby cms stores subpages like this:
+    // parentpage/childpage -> parentpage+childpage
+    // so let's replace the slash with a +
+    const requestPath = path.replace('/', '+')
+
+    const pageInStore = state.pages.find(p => p.id === path)
 
     // check if page already is in store
     if (pageInStore) {
@@ -35,7 +41,7 @@ const actions = {
     } else {
       const page = await dispatch('fetchPage', {
         // lang: payload.lang,
-        slug: path
+        slug: requestPath
       })
       commit('SAVE_CURRENT_PAGE', page)
       commit('SAVE_PAGE_IN_STORE', page)
@@ -171,6 +177,8 @@ const mutations = {
     state.loading = false
   },
   SAVE_CURRENT_PAGE(state, page) {
+    // We have to use Vue.set() here, see: https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
+    // Vue.set(state.data, 'currentPage', page)
     state.currentPage = page
   },
   SAVE_PAGE_IN_STORE(state, page) {

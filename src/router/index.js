@@ -17,6 +17,11 @@ const routes = [
     component: ArchiveView
   },
   {
+    path: '/archive/*',
+    name: 'archive-entry',
+    component: DefaultView
+  },
+  {
     path: '/*',
     name: 'default',
     component: DefaultView
