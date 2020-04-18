@@ -17,7 +17,6 @@
     <ContentBox v-if="channel">
       <TwitchEmbed :channel="channel"></TwitchEmbed>
     </ContentBox>
-    <router-link to="/archive">ARchiv</router-link>
   </div>
 </template>
 
