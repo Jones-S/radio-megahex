@@ -90,59 +90,61 @@ const actions = {
       })
   },
   mergeArrays({}, { broadcasts, meta }) { // eslint-disable-line
-    const broadcastsArray = [{
-        'name': 'jones1.mp3',
-        'type': 'file',
-        'mtime': 'Thu, 07 Apr 2020 17:59:48 GMT',
-        'size': 286854928
-      },
-      {
-        'name': 'jones2.mp3',
-        'type': 'file',
-        'mtime': 'Thu, 09 Apr 2020 17:59:48 GMT',
-        'size': 286854928
-      },
-      ...broadcasts,
-      {
-        'name': 'jonesi.mp3',
-        'type': 'file',
-        'mtime': 'Thu, 09 Aug 2020 10:59:48 GMT',
-        'size': 286854928
-      },
-      {
-        'name': 'jones.mp3',
-        'type': 'file',
-        'mtime': 'Thu, 09 Dec 2021 10:59:48 GMT',
-        'size': 286854928
-      }
-    ]
-    const broadcastsMeta = [
-      ...meta,
-      {
-        "title": "Jones is in da House. Parganzi a longer title even go for itèè",
-        "file": "jones1.mp3",
-        "start_time": "14:00",
-        "end_time": "18:00"
-      },
-      {
-        "title": "Jones is in da House. Parganzi a longer title even go for ",
-        "file": "jones2.mp3",
-        "start_time": "14:00",
-        "end_time": "18:00"
-      },
-      {
-        "title": "Jones is in da House. Parganzi a longer title even go for 12",
-        "file": "jonesi.mp3",
-        "start_time": "14:00",
-        "end_time": "18:00"
-      },
-      {
-        "title": "Jones is in da House. Parganzi",
-        "file": "jones.mp3",
-        "start_time": "14:00",
-        "end_time": "18:00"
-      },
-    ]
+    const broadcastsArray = [...broadcasts]
+    const broadcastsMeta = [...meta]
+    // const broadcastsArray = [{
+    //     'name': 'jones1.mp3',
+    //     'type': 'file',
+    //     'mtime': 'Thu, 07 Apr 2020 17:59:48 GMT',
+    //     'size': 286854928
+    //   },
+    //   {
+    //     'name': 'jones2.mp3',
+    //     'type': 'file',
+    //     'mtime': 'Thu, 09 Apr 2020 17:59:48 GMT',
+    //     'size': 286854928
+    //   },
+    //   ...broadcasts,
+    //   {
+    //     'name': 'jonesi.mp3',
+    //     'type': 'file',
+    //     'mtime': 'Thu, 09 Aug 2020 10:59:48 GMT',
+    //     'size': 286854928
+    //   },
+    //   {
+    //     'name': 'jones.mp3',
+    //     'type': 'file',
+    //     'mtime': 'Thu, 09 Dec 2021 10:59:48 GMT',
+    //     'size': 286854928
+    //   }
+    // ]
+    // const broadcastsMeta = [
+    //   ...meta,
+    //   {
+    //     "title": "Jones is in da House. Parganzi a longer title even go for itèè",
+    //     "file": "jones1.mp3",
+    //     "start_time": "14:00",
+    //     "end_time": "18:00"
+    //   },
+    //   {
+    //     "title": "Jones is in da House. Parganzi a longer title even go for ",
+    //     "file": "jones2.mp3",
+    //     "start_time": "14:00",
+    //     "end_time": "18:00"
+    //   },
+    //   {
+    //     "title": "Jones is in da House. Parganzi a longer title even go for 12",
+    //     "file": "jonesi.mp3",
+    //     "start_time": "14:00",
+    //     "end_time": "18:00"
+    //   },
+    //   {
+    //     "title": "Jones is in da House. Parganzi",
+    //     "file": "jones.mp3",
+    //     "start_time": "14:00",
+    //     "end_time": "18:00"
+    //   },
+    // ]
     const mergedArray = mergeArraysByValue(broadcastsArray, broadcastsMeta, 'name', 'file')
 
     console.log('mergedArray: ', mergedArray)
