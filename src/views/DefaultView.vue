@@ -2,6 +2,22 @@
   <div class="DefaultView">
     <div v-if="page">
       <ContentBox
+        v-if="page.id !== 'home'"
+        :inverted="true"
+        :columns="susyColumns()"
+        :no-line="false"
+      >
+        <Heading :level="1" v-if="date" class="Heading--inline DefaultView__date">{{ date }}</Heading>
+        <Heading :level="1" v-if="time" class="Heading--colored Heading--inline">{{ time }}</Heading>
+        <Heading :level="1">{{ page.title }}</Heading>
+      </ContentBox>
+      <ContentBox
+        v-if="file"
+        :columns="susyColumns()"
+      >
+       <AudioPlayer :src="file" :program="page.title" :show-playbar="true"></AudioPlayer>
+      </ContentBox>
+      <ContentBox
         v-for="(paragraph, index) in paragraphs"
         :key="index"
         :inverted="!!paragraph.inverted"
@@ -28,11 +44,15 @@ import Loader from '../components/Loader.vue'
 import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
+import AudioPlayer from '../components/AudioPlayer.vue'
 import { connectionLineHelper } from '../mixins/helpers'
+import { format } from 'date-fns'
+import config from '../config'
 
 export default {
   name: 'DefaultView',
   components: {
+    AudioPlayer,
     Loader,
     TwitchEmbed,
     FloatingImages,
@@ -60,6 +80,20 @@ export default {
     floatingImages() {
       if (!this.page || !this.page.content || !this.page.content.draggable_images) return false
       return this.page.content.draggable_images
+    },
+    date() {
+      if (!this.page || !this.page.content || !this.page.content.date) return false
+      // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
+      const date = this.page.content.date.replace('&#160;', ' ')
+      return format(new Date(date), 'yyyy-MM-dd')
+    },
+    time() {
+      if (!this.page || !this.page.content || !this.page.content.start_time || !this.page.content.end_time) return false
+      return `${this.page.content.start_time}—${this.page.content.end_time}`
+    },
+    file() {
+      if (!this.page || !this.page.content || !this.page.content.filename) return false
+      return `${config.recordingsUrl}${this.page.content.filename}`
     }
   },
   watch: {
@@ -86,6 +120,12 @@ export default {
   $c: 'DefaultView';
 
   .#{$c} {
-
+    &__date {
+      &::after {
+        display: inline-block;
+        content: '';
+        margin-right: 1em;
+      }
+    }
   }
 </style>

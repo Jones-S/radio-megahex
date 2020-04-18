@@ -23,12 +23,12 @@
 import { VBreakpoint } from 'vue-breakpoint-component'
 import FloatingElement from './FloatingElement.vue'
 import ColoredImage from './ColoredImage.vue'
-import Paragraph from './Paragraph.vue'
+// import Paragraph from './Paragraph.vue'
 
 export default {
   name: 'FloatingImages',
   components: {
-    Paragraph,
+    // Paragraph,
     ColoredImage,
     FloatingElement,
     VBreakpoint

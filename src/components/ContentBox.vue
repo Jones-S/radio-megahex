@@ -135,6 +135,10 @@ export default {
         & > * {
           color: $s-color-white;
         }
+
+        .Heading--colored {
+          color: $s-color-primary;
+        }
       }
     }
 

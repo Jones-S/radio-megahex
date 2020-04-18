@@ -4,9 +4,9 @@ const state = {
 
 // actions
 const actions = {
-  toggleSpyMaster({ commit }) {
-    commit('TOGGLE_SPYMASTER')
-  }
+  setCurrentPlayer() {
+    // action does nothing, components can subscribe to it
+  },
 }
 
 // mutations

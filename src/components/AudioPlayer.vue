@@ -1,6 +1,6 @@
 <template>
   <div class="AudioPlayer">
-    <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing }]">
+    <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing, 'AudioPlayer__textbox--no-margin-bottom' : showPlaybar }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
         <span ref="ticker" class="AudioPlayer__text" v-html="program" />
         <span v-show="overflowing" class="AudioPlayer__dots">...</span>
@@ -10,8 +10,25 @@
       <source :src="src" type="audio/mpeg">
       Sorry, your browser does not support the audio tag.
     </audio>
+
+    <!-- Only use v-show because refs.playhead is undefined otherwise -->
+    <div
+      v-show="showPlaybar"
+      class="AudioPlayer__progress-bar"
+    >
+      <div ref="progressbar" class="AudioPlayer__track-line" @click="setPlayPosition" />
+      <div
+        class="AudioPlayer__track-line AudioPlayer__track-line--colored"
+        :style="`width: ${userPosXInPercent ? userPosXInPercent : percentComplete}%; border-right-width: ${!userPosXInPercent ? 0 : '1px' }`"
+      />
+      <div class="AudioPlayer__time-indicators">
+        <span :class="['AudioPlayer__time AudioPlayer__time--current']">{{ currentTime }}</span>
+        <span :class="['AudioPlayer__time AudioPlayer__time--duration']">{{ durationTime }}</span>
+      </div>
+    </div>
+
     <div class="AudioPlayer__controls">
-      <button :class="['AudioPlayer__button', playing ? 'AudioPlayer__button--stop' : 'AudioPlayer__button--play']" @click="playing ? stop() : play()">Play</button>
+      <button :class="['AudioPlayer__button', buttonState]" @click="playing ? stop() : play()">Play</button>
       <button :class="['AudioPlayer__button AudioPlayer__button--volume', { 'AudioPlayer__button--volume-down' : volume == 0 }]">
         Adjust volume
         <div class="AudioPlayer__range-wrapper">
@@ -23,6 +40,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'AudioPlayer',
   props: {
@@ -36,6 +55,10 @@ export default {
       required: true,
       default: 'Radio megahex.fm'
     },
+    showPlaybar: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -45,10 +68,52 @@ export default {
       tickerPosition: 0,
       deltaWrapperTextWidth: false,
       overflowing: false,
-      tickerStep: 0.5 // in px per frame
+      tickerStep: 0.5, // in px per frame
+      interval: false,
+      currentSeconds: 0,
+      durationSeconds: 0,
+      loaded: false,
+      loading: false,
+      touching: false,
+      dragging: false,
+      userPosXInPercent: false,
+    }
+  },
+  computed: {
+    currentTime() {
+      return this.convertTimeHHMMSS(this.currentSeconds)
+    },
+    durationTime() {
+      return this.convertTimeHHMMSS(this.durationSeconds)
+    },
+    isDragged() {
+      if (this.touching || this.dragging) return true
+      return false
+    },
+    percentComplete() {
+      if (!this.durationSeconds) return 0
+      return parseInt((this.currentSeconds / this.durationSeconds) * 100, 10)
+    },
+    buttonState() {
+      if (!this.playing) return 'AudioPlayer__button--play'
+      return this.showPlaybar ? 'AudioPlayer__button--pause' : 'AudioPlayer__button--stop'
     }
   },
   mounted() {
+    this.initEventListeners()
+
+    // subscribe to action to listen if other players start playing
+    this.$store.subscribeAction(action => {
+      console.log('action: ', action)
+      console.log('this._uid: ', this._uid)
+      if (action.type === "ui/setCurrentPlayer" && action.payload) {
+        // check which player is playing. if it is not self, then pause
+        if (action.payload !== this._uid) {
+          this.pause()
+        }
+      }
+    })
+
     // calculate amount of pixel difference between text and wrapper == how much we have to translate text to actually see the end...
     this.deltaWrapperTextWidth = this.$refs.wrapper.clientWidth - this.$refs.ticker.clientWidth
 
@@ -67,9 +132,26 @@ export default {
     }
   },
   methods: {
-    play() {
+    ...mapActions('ui', ['setCurrentPlayer']),
+    initEventListeners() {
+      this.$refs.audio.addEventListener('timeupdate', this.update)
+      this.$refs.audio.addEventListener('loadeddata', this.load)
+    },
+    play(position) {
+      // dispatch action, which other players subscribe to, to say that this player is currently playing
+      this.setCurrentPlayer(this._uid)
+
+      if (!this.$refs.audio) return
       this.$refs.audio.play()
       this.playing = true
+      if (position) {
+        this.$refs.audio.currentTime = position
+      }
+    },
+    pause() {
+      if (!this.$refs.audio) return
+      this.$refs.audio.pause()
+      this.playing = false
     },
     stop() {
       this.$refs.audio.pause()
@@ -84,12 +166,59 @@ export default {
     adjustVolume() {
       this.$refs.audio.volume = (this.volume / 100)
     },
+    update() {
+      // because loaded is set later than the audio starts to play, we end up with a loading button but a playing audio
+      // therefore we also set loading to false whenever we have a timeupdate
+      this.setLoading(false)
+      this.currentSeconds = parseInt(this.$refs.audio.currentTime, 10)
+    },
     animate() {
       this.$refs.ticker.style.transform =`translateX(${this.tickerPosition}px)`
       const nextIteration = this.tickerPosition -= this.tickerStep
       this.tickerPosition = this.tickerPosition <= this.deltaWrapperTextWidth ? 0 : nextIteration
       window.requestAnimationFrame(this.animate)
-    }
+    },
+    setLoading(bool) {
+      this.loading = bool
+    },
+    load() {
+      this.interval = setInterval(this.checkIfAudioISLoaded, 3000)
+    },
+    checkIfAudioISLoaded() {
+      try {
+        if (this.$refs.audio && this.$refs.audio.readyState >= 2) {
+          this.loaded = true
+          // this.setLoading(false)
+          this.durationSeconds = parseInt(this.$refs.audio.duration, 10)
+          clearInterval(this.interval)
+          return
+        }
+      } catch (err) {
+        console.error('Failed to load sound file. Error:', err) // eslint-disable-line no-console
+      }
+    },
+    setPlayPosition(e) {
+      const absoluteClickPosX = e.pageX
+      const progressbarPosX = this.$refs.progressbar.getBoundingClientRect().x // returns X position on screen
+      const progressBarWidth = this.$refs.progressbar.getBoundingClientRect().width // returns X position on screen
+      // We can now calculate where the element was clicked
+      const clickPosX = absoluteClickPosX - progressbarPosX
+      // and now we set this in relation with the whole width of the progressbar to get a percent of the progress
+      const progressInPercent = clickPosX/progressBarWidth * 100
+      this.userPosXInPercent = progressInPercent
+      const newPosition = this.setPlayheadByUser(progressInPercent)
+      this.currentSeconds = newPosition
+      this.play(newPosition)
+    },
+    setPlayheadByUser(percent) {
+      // returns currentTime in seconds
+      return parseInt(this.$refs.audio.duration * (percent / 100), 10) // prettier-ignore
+    },
+    convertTimeHHMMSS(val) {
+      if (!val) return '00:00'
+      const hhmmss = new Date(val * 1000).toISOString().substr(11, 8)
+      return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss
+    },
   }
 }
 </script>
@@ -101,6 +230,10 @@ export default {
 
   $c-audioplayer-button-size: 5.2rem;
   $c-audioplayer-text-wrapper-size: 3.5rem;
+  $c-audioplayer-playhead-clickable-area: 5rem;
+  $c-audioplayer-playhead-size: 1rem;
+  $c-audioplayer-trackline-height: 2.2rem;
+  $c-audioplayer-offset-at-edge: 3rem;
 
   .#{$c} {
     @include font-style-extra;
@@ -110,13 +243,18 @@ export default {
       padding: 0 0.3rem;
       height: $c-audioplayer-text-wrapper-size;
       width: 100%;
-      max-width: calc(100% - #{$s-size-gutter-medium});
+      // max-width: calc(100% - #{$s-size-gutter-medium});
       border: 1px solid $s-color-black;
       position: relative;
       margin-bottom: $s-box-distance;
 
       &--overflowing {
         padding-right: 3.3rem;
+      }
+
+      &--no-margin-bottom {
+        margin-bottom: 0;
+        border-bottom-width: 0;
       }
     }
 
@@ -173,6 +311,10 @@ export default {
 
       &--stop {
         background-image: url('~@/assets/icon/stop.svg');
+      }
+
+      &--pause {
+        background-image: url('~@/assets/icon/pause.svg');
       }
     }
 
@@ -234,6 +376,56 @@ export default {
       cursor: pointer;
       border-radius: 0;
       background-color: $s-color-black;
+    }
+
+    &__progress-bar {
+      cursor: pointer;
+      position: relative;
+      height: $c-audioplayer-trackline-height;
+      max-height: $c-audioplayer-trackline-height;
+      margin-bottom: $s-box-distance;
+    }
+
+    &__track-line {
+      width: 100%;
+      height: $c-audioplayer-trackline-height;
+      border: 1px solid $s-color-black;
+
+      &--colored {
+        position: relative;
+        top: -$c-audioplayer-trackline-height;
+        background-color: $s-color-primary;
+        pointer-events: none;
+      }
+    }
+
+    &__progress {
+      position: relative;
+    }
+
+    &__time-indicators {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      padding: 0 0.3em;
+      align-items: center;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    &__time {
+      transition: transform $s-animation-duration-default;
+
+      &--current {
+
+      }
+
+      &.is-at-edge {
+        transform: translateY(-#{$c-audioplayer-offset-at-edge});
+      }
     }
   }
 </style>

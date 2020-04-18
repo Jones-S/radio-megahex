@@ -66,5 +66,13 @@ export default {
     &--h3 {
       @include font-style-heading-1;
     }
+
+    &--colored {
+      color: $s-color-primary;
+    }
+
+    &--inline {
+      display: inline;
+    }
   }
 </style>

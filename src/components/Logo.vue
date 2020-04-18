@@ -1,8 +1,8 @@
 <template>
-  <span class="Logo">
+  <router-link class="Logo" to="/">
     <h1>megahex.fm</h1>
     <img src="@/assets/logo.jpg" alt="megahex.fm Logo" />
-  </span>
+  </router-link>
 </template>
 
 <script>
