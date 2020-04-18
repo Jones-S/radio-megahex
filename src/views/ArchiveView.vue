@@ -3,7 +3,7 @@
     <ContentBox
       :inverted="true"
       :columns="susyColumns()"
-      :no-line="false"
+      :no-line="true"
     >
       <BroadcastList v-if="broadcasts" :broadcasts="broadcasts" />
     </ContentBox>
