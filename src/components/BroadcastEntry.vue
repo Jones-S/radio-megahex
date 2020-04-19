@@ -2,7 +2,7 @@
   <router-link :class="['BroadcastEntry', { 'is-last': isLastOfDay }]" :to="`/${uri}`" :title="title">
       <span>
         <span class="BroadcastEntry__date">{{ date }}</span>
-        <span class="BroadcastEntry__time">{{ time }}</span>
+        <span v-if="time" class="BroadcastEntry__time">{{ time }}</span>
       </span><br>
       <span class="BroadcastEntry__title">{{ title }}</span>
   </router-link>
@@ -38,7 +38,10 @@ export default {
       return format(new Date(this.data.mtime), 'yyyy-MM-dd')
     },
     time() {
-      return `${this.data.start_time}—${this.data.end_time}`
+      if (!this.data.date) return false
+      const date = this.data.date.replace('&#160;', 'T')
+      const starttime = format(new Date(date), 'HH:mm')
+      return `${starttime}—${this.data.end_time}`
     },
   }
 }
