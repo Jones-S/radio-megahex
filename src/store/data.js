@@ -66,6 +66,7 @@ const actions = {
   async fetchBroadCasts() {
     return axios.get(config.recordingsUrl)
       .then((response) => {
+        console.log('response: ', response)
         if (response.status === 200 && response.data) {
           return response.data
         } else {
@@ -77,9 +78,10 @@ const actions = {
   },
   async fetchbroadcastsMeta() {
     const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/archive` : `${config.apiBaseUrlRemote}/archive`
-
+    console.log('fetch: ')
     return axios.get(url)
       .then((response) => {
+        console.log('response: ', response)
         if (response.status === 200 && response.data) {
           return response.data.archive_entries
         } else {
@@ -147,8 +149,6 @@ const actions = {
     // ]
     const mergedArray = mergeArraysByValue(broadcastsArray, broadcastsMeta, 'name', 'file')
 
-    console.log('mergedArray: ', mergedArray)
-
     // Filter those out which don't have any metadata
     return mergedArray.filter(item => item.title)
 
@@ -158,6 +158,7 @@ const actions = {
 
     return axios.get(url)
       .then((response) => {
+        console.log('response: ', response)
         if (response.status === 200 && response.data && response.data.data) {
           const page = response.data.data
           return page

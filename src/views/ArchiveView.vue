@@ -34,6 +34,7 @@ export default {
     ...mapState('data', ['broadcasts'])
   },
   async mounted() {
+    console.log('hello')
     this.fetchBroadCastData()
   },
   methods: {

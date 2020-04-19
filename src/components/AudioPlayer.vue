@@ -104,8 +104,6 @@ export default {
 
     // subscribe to action to listen if other players start playing
     this.$store.subscribeAction(action => {
-      console.log('action: ', action)
-      console.log('this._uid: ', this._uid)
       if (action.type === "ui/setCurrentPlayer" && action.payload) {
         // check which player is playing. if it is not self, then pause
         if (action.payload !== this._uid) {
