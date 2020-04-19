@@ -35,14 +35,16 @@ export default {
       return this.data.file
     },
     date() {
-      return format(new Date(this.data.mtime), 'yyyy-MM-dd')
+      if (!this.data.date) return false
+      const date = this.data.date.replace('&#160;', 'T')
+      return format(new Date(date), 'yyyy-MM-dd')
     },
     time() {
       if (!this.data.date) return false
       const date = this.data.date.replace('&#160;', 'T')
       const starttime = format(new Date(date), 'HH:mm')
       return `${starttime}—${this.data.end_time}`
-    },
+    }
   }
 }
 </script>
