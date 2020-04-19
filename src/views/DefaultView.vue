@@ -84,12 +84,15 @@ export default {
     date() {
       if (!this.page || !this.page.content || !this.page.content.date) return false
       // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
-      const date = this.page.content.date.replace('&#160;', ' ')
+      const date = this.page.content.date.replace('&#160;', 'T')
+      console.log('date: ', date)
       return format(new Date(date), 'yyyy-MM-dd')
     },
     time() {
-      if (!this.page || !this.page.content || !this.page.content.start_time || !this.page.content.end_time) return false
-      return `${this.page.content.start_time}—${this.page.content.end_time}`
+      if (!this.page || !this.page.content || !this.page.content.date || !this.page.content.end_time) return false
+      const date = this.page.content.date.replace('&#160;', 'T')
+      const starttime = format(new Date(date), 'HH:mm')
+      return `${starttime}—${this.page.content.end_time}`
     },
     file() {
       if (!this.page || !this.page.content || !this.page.content.filename) return false
