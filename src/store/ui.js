@@ -7,6 +7,9 @@ const actions = {
   setCurrentPlayer() {
     // action does nothing, components can subscribe to it
   },
+  setTopFloatingElement() {
+    // action does nothing, components can subscribe to it
+  },
 }
 
 // mutations

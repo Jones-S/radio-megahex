@@ -2,7 +2,6 @@
   <div class="FloatingElement">
     <VueDragResize
       v-if="ready"
-      :isActive="isActive"
       :w="initialWidth"
       :h="initialHeight"
       :x="initialXPosition"
@@ -12,10 +11,9 @@
       :isDraggable="true"
       @resizing="resize"
       @dragging="resize"
-      @activated="activate"
       @deactivated="deactivate"
       :sticks="['tr','tl','bl','br']"
-      class="FloatingElement__drag-box"
+      :class="['FloatingElement__drag-box']"
     >
       <div class="FloatingElement__content">
         <button class="FloatingElement__button" @click="destroy">Close
@@ -35,6 +33,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapActions } from 'vuex'
 import VueDragResize from 'vue-drag-resize'
 Vue.component('vue-drag-resize', VueDragResize)
 import { draggableImageHelper } from '../mixins/helpers'
@@ -79,7 +78,6 @@ export default {
       top: 0,
       left: 0,
       zIndex: 10,
-      isActive: false,
       documentWidth: false,
       documentHeight: false,
       distanceToTop: 150 // relatively random
@@ -102,6 +100,17 @@ export default {
       this.initialYPosition = this.options && this.options.yPos ? this.options.yPos : 100,
       this.ready = true
     }
+
+     // subscribe to action to listen if other players start playing
+    this.$store.subscribeAction(action => {
+      if (action.type === "ui/setTopFloatingElement" && action.payload) {
+        // check which player is playing. if it is not self, then pause
+        if (action.payload !== this._uid) {
+          this.deactivate()
+        }
+      }
+    })
+
   },
 beforeDestroy () {
   if(this.$el.parentNode) {
@@ -109,18 +118,17 @@ beforeDestroy () {
   }
 },
   methods: {
+    ...mapActions('ui', ['setTopFloatingElement']),
     resize(newRect) {
+      this.setTopFloatingElement(this._uid)
       this.width = newRect.width;
       this.height = newRect.height;
       this.top = newRect.top;
       this.left = newRect.left;
-    },
-    activate() {
-      this.isActive = true
       this.zIndex = 100
     },
     deactivate() {
-      this.isActive = false
+      this.zIndex = 10
     },
     destroy() {
       this.$destroy()
@@ -142,8 +150,8 @@ beforeDestroy () {
       cursor: move; /* fallback if grab cursor is unsupported */
       cursor: grab;
 
-      &--is-active {
-        z-index: 20;
+      &.is-active {
+        z-index: 100;
       }
     }
 
