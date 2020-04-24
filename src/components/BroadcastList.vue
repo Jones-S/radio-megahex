@@ -30,27 +30,30 @@ export default {
     broadcastsDividedInMonths() {
       const years = new Map
       this.broadcasts.forEach(show => {
-        const date = new Date(show.mtime)
-        // const date = new Date(show.mtime).toUTCString()
-        const year = date.getFullYear()
-        const month = date.getMonth() // Jan is 0
+        if (show.date) {
+          const date = new Date(show.date)
+          // const date = new Date(show.mtime).toUTCString()
+          const year = date.getFullYear()
+          const month = date.getMonth() // Jan is 0
 
-        if (years.has(year)) {
-          const months = years.get(year) // months is a map too
-          if (months.has(month)) {
-            // add show to existing month
-            months.set(month, [show, ...months.get(month)])
+          if (years.has(year)) {
+            const months = years.get(year) // months is a map too
+            if (months.has(month)) {
+              // add show to existing month
+              months.set(month, [show, ...months.get(month)])
+            } else {
+              // if month does not exist, add it
+              months.set(month, [show])
+            }
           } else {
-            // if month does not exist, add it
+            const months = new Map
             months.set(month, [show])
+            years.set(year, months)
           }
-        } else {
-          const months = new Map
-          months.set(month, [show])
-          years.set(year, months)
         }
       })
 
+      console.log('years: ', years)
       return transformMapToArrayDeep(years)
     }
   },
