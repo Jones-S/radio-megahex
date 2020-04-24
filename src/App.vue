@@ -1,35 +1,22 @@
 <template>
   <div id="app" :class="['App']">
-    <Logo />
-    <AudioPlayer :src="src" :program="program"></AudioPlayer>
-    <router-link to="/archive">Archiv</router-link>
-    <router-link to="/archive/coronista">Archiv Entry</router-link>
+    <Header />
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import config from './config.js'
-import Logo from './components/Logo.vue'
-import AudioPlayer from './components/AudioPlayer.vue'
+import Header from './components/Header.vue'
 
 export default {
   name: 'app',
   components: {
-    AudioPlayer,
-    Logo
+    Header
   },
   data: () => {
     return {
       src: config.streamUrl
-    }
-  },
-  computed: {
-    ...mapState('data', ['site']),
-    program() {
-      if (!this.site || !this.site.broadcast) return '...'
-      return this.site.broadcast
     }
   },
   metaInfo:() => {
@@ -68,5 +55,12 @@ $c: 'App';
   height: 100%;
   min-height: 100vh;
   transition: background-color $s-animation-duration-default;
+
+  @include mq($from: medium) {
+    margin-left: 0;
+  }
+  @include mq($from: large) {
+    margin-left: 0;
+  }
 }
 </style>

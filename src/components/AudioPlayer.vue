@@ -227,7 +227,7 @@ export default {
   $c: 'AudioPlayer';
 
   $c-audioplayer-button-size: 5.2rem;
-  $c-audioplayer-text-wrapper-size: 3.5rem;
+  $c-audioplayer-text-wrapper-size: $s-size-textbox;
   $c-audioplayer-playhead-clickable-area: 5rem;
   $c-audioplayer-playhead-size: 1rem;
   $c-audioplayer-trackline-height: 2.2rem;
@@ -416,10 +416,6 @@ export default {
 
     &__time {
       transition: transform $s-animation-duration-default;
-
-      &--current {
-
-      }
 
       &.is-at-edge {
         transform: translateY(-#{$c-audioplayer-offset-at-edge});

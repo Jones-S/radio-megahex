@@ -28,7 +28,6 @@ const actions = {
     if (!path) {
       path = config.homeSlug
     }
-
     // kirby cms stores subpages like this:
     // parentpage/childpage -> parentpage+childpage
     // so let's replace the slash with a +
@@ -42,29 +41,33 @@ const actions = {
     // check if page already is in store
     if (pageInStore) {
       commit('SAVE_CURRENT_PAGE', pageInStore)
+      page = pageInStore
     } else {
       page = dispatch('fetchPage', {
         // lang: payload.lang,
         slug: requestPath
       })
-
-      // Because we assume that the site was fetched if a page is in the store we put this in here
-      // also fetch site info
-      // example: current radio program and navigation
-      site = dispatch('fetchSite')
     }
+
+    // always try to fetch site info
+    // example: current radio program and navigation
+    site = dispatch('fetchSite')
 
     Promise.all([page, site]).then((data) => {
       commit('SAVE_CURRENT_PAGE', data[0])
       commit('SAVE_PAGE_IN_STORE', data[0])
-      commit('SAVE_SITE', data[1])
+      if (data[1] !== true) {
+        commit('SAVE_SITE', data[1])
+      }
 
       commit('SET_LOADING_DONE')
     })
 
   },
   async fetchSite({ state }) {
-    if (!state.site) {
+    if (state.site) {
+      return true // instead of resolving a resolved promise
+    } else {
       const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/megahex` : `${config.apiBaseUrlRemote}/megahex`
       return axios.get(url)
         .then((response) => {
@@ -77,7 +80,6 @@ const actions = {
           console.error(err) // eslint-disable-line
         })
     }
-    return true // instead of resolving a resolved promise
   },
   async fetchBroadCastData({ commit, state, dispatch}) {
     if (!state.broadcasts) {
@@ -177,6 +179,9 @@ const getters = {
     if (state.loading || !state.currentPage) return false
     return state.currentPage
   },
+  getMenu: state => {
+    return state.site && state.site.navigation ? state.site.navigation : false
+  }
 }
 
 

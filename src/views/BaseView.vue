@@ -14,7 +14,7 @@ export default {
   },
   watch: {
     // call again the method if the route changes
-    $route: function(oldRoute, newRoute) {
+    $route: function(newRoute) {
       this.fetchData(newRoute)
     }
   },

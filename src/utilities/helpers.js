@@ -106,3 +106,14 @@ export function transformMapToArrayDeep(map) {
   return array
 }
 
+/**
+ * Test if slug is homeSlug ('home').
+ *
+ * @param  {string} slug
+ * @param  {string} [homeSlug]
+ * @return {Boolean}
+ */
+
+export function isHomeSlug(slug, homeSlug = 'home') {
+  return slug === homeSlug
+}

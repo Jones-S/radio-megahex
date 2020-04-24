@@ -1,26 +1,38 @@
 <template>
   <div class="Header">
-    <Logo />
-    <ToggleButton :text="'Spielleiter-Ansicht'" @toggle="switchView" />
+    <div class="Header__left">
+      <Logo />
+      <AudioPlayer :src="src" :program="program"></AudioPlayer>
+    </div>
+    <Navigation />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
+import config from '../config.js'
 
 import Logo from './Logo.vue'
-import ToggleButton from './ToggleButton.vue'
+import AudioPlayer from './AudioPlayer.vue'
+import Navigation from './Navigation.vue'
 
 export default {
   name: 'Header',
   components: {
-    ToggleButton,
+    Navigation,
+    AudioPlayer,
     Logo
   },
-  methods: {
-    ...mapActions('ui', ['toggleSpyMaster']),
-    switchView() {
-      this.toggleSpyMaster()
+    data: () => {
+    return {
+      src: config.streamUrl
+    }
+  },
+  computed: {
+    ...mapState('data', ['site']),
+    program() {
+      if (!this.site || !this.site.broadcast) return '...'
+      return this.site.broadcast
     }
   }
 }
@@ -30,28 +42,20 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/css/global';
   $c: 'Header';
-  
+
   .#{$c} {
-    height: $s-the-header-bar-height;
-    /* offset-x | offset-y | blur-radius | color */
-    box-shadow: 0 0 3rem rgba($s-color-black, 0.3);
+    // height: $s-the-header-bar-height;
     display: flex;
-    align-items: center;
-    padding: 0 $s-size-gutter-small;
-    margin-bottom: $s-size-gutter-medium;
+    padding-top: $s-size-gutter-small;
     justify-content: space-between;
-    transition: background-color $s-animation-duration-default;
+
+    &__left {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   @include mq($from: large) {
     padding: 0 $s-size-gutter-medium;
-  }
-
-  // spymaster view
-  .is-dark {
-    .#{$c} {
-      background-color: $s-color-black;
-      /* offset-x | offset-y | blur-radius | color */
-      box-shadow: 0 0 3rem rgba($s-color-white, 0.3);    }
   }
 </style>
