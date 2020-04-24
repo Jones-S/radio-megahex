@@ -1,6 +1,6 @@
 <template>
-  <div class="Navigation">
-    <ul :class="['Navigation__list', navMenuOpen ? 'is-open' : '']">
+  <div :class="['Navigation', { 'is-open' :navMenuOpen }]">
+    <ul :class="['Navigation__list']">
       <li
         v-for="(item, key) in menu"
         :key="`nav-item-${key}`"
@@ -12,22 +12,30 @@
           :to="`/${removeHomeSlug(item.uri)}`"
           :exact="isHomeSlug(item.uri)"
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="item.title" />
         </router-link>
       </li>
     </ul>
+    <v-breakpoint>
+      <div slot-scope="scope" v-if="scope.viewportWidth">
+        <button v-if="scope.viewportWidth < 430" class="Navigation__menu-button" @click="toggleMenu">{{ navMenuOpen ? 'X Menu' : 'Open Menu'}}</button>
+      </div>
+    </v-breakpoint>
   </div>
 </template>
 
 <script>
+import { VBreakpoint } from 'vue-breakpoint-component'
 import { mapActions, mapGetters } from 'vuex'
 import { isHomeSlug } from '../utilities/helpers'
 
 export default {
   name: 'Navigation',
+  components: {
+    VBreakpoint
+  },
   computed: {
-    ...mapGetters('data', ['getMenu', 'langLinks']),
+    ...mapGetters('data', ['getMenu']),
     ...mapGetters('ui', ['navMenuOpen']),
     menu() {
       return this.getMenu
@@ -70,12 +78,47 @@ export default {
   $c: 'Navigation';
 
   .#{$c} {
+    transform: translateY(calc(-100% + #{$s-size-textbox}));
+    transition: transform $s-animation-duration-default;
+    position: absolute;
+    right: $s-size-gutter-small;
+
+    @include mq($from: 430) {
+      position: relative;
+      right: auto;
+    }
+
+    &.is-open {
+      transform: none;
+    }
+
+    @include mq($from: 430) {
+      transform: none;
+    }
+
     &__list {
       display: flex;
       flex-direction: column;
+      background-color: $s-color-white;
     }
 
-    &__item {
+    &__menu-button {
+      @include reset-button;
+      @include font-style-extra;
+      display: inline-block;
+      position: relative;
+      text-align: right;
+      background-color:white;
+      height: $s-size-textbox;
+
+      &:hover {
+        border: 1px solid $s-color-primary;
+        box-shadow: inset 0 1px 10px 3px $s-color-primary;
+      }
+    }
+
+    &__item,
+    &__menu-button {
       border: 1px solid $s-color-black;
       margin-bottom: $s-box-distance;
 

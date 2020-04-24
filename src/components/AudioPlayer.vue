@@ -8,7 +8,9 @@
     </div>
     <audio ref="audio" countrols="controls">
       <source :src="src" type="audio/mpeg">
+      <!--googleoff: index-->
       Sorry, your browser does not support the audio tag.
+      <!--googleon: index-->
     </audio>
 
     <!-- Only use v-show because refs.playhead is undefined otherwise -->
@@ -53,7 +55,6 @@ export default {
     program: {
       type: String,
       required: true,
-      default: 'Radio megahex.fm'
     },
     showPlaybar: {
       type: Boolean,
@@ -77,6 +78,14 @@ export default {
       touching: false,
       dragging: false,
       userPosXInPercent: false,
+    }
+  },
+  watch: {
+    program: function(newProgram) {
+      console.log('newProgram: ', newProgram)
+      this.$nextTick(() => { // wait until text window is filled with content to have access to width of text
+        this.calculateOverflow()
+      })
     }
   },
   computed: {
@@ -112,25 +121,28 @@ export default {
       }
     })
 
-    // calculate amount of pixel difference between text and wrapper == how much we have to translate text to actually see the end...
-    this.deltaWrapperTextWidth = this.$refs.wrapper.clientWidth - this.$refs.ticker.clientWidth
-
-    // set initial volume
-    this.$refs.audio.volumne = this.volume
-
-    // start animation if text is longer than wrapper
-    if (this.deltaWrapperTextWidth < 0) {
-      // set ... to indicate that there is more text
-      this.overflowing = true
-
-      setTimeout(() => {
-        // wait 3s before startin animation
-        window.requestAnimationFrame(this.animate)
-      }, 3000)
-    }
+    this.calculateOverflow()
   },
   methods: {
     ...mapActions('ui', ['setCurrentPlayer']),
+    calculateOverflow() {
+      // calculate amount of pixel difference between text and wrapper == how much we have to translate text to actually see the end...
+      this.deltaWrapperTextWidth = this.$refs.wrapper.clientWidth - this.$refs.ticker.clientWidth
+
+      // set initial volume
+      this.$refs.audio.volumne = this.volume
+
+      // start animation if text is longer than wrapper
+      if (this.deltaWrapperTextWidth < 0) {
+        // set ... to indicate that there is more text
+        this.overflowing = true
+
+        setTimeout(() => {
+          // wait 3s before startin animation
+          window.requestAnimationFrame(this.animate)
+        }, 3000)
+      }
+    },
     initEventListeners() {
       this.$refs.audio.addEventListener('timeupdate', this.update)
       this.$refs.audio.addEventListener('loadeddata', this.load)
@@ -236,12 +248,14 @@ export default {
   .#{$c} {
     @include font-style-extra;
     margin-bottom: $s-box-margin;
+    max-width: 100%;
+    width: 100%;
 
     &__textbox {
       padding: 0 0.3rem;
       height: $c-audioplayer-text-wrapper-size;
       width: 100%;
-      // max-width: calc(100% - #{$s-size-gutter-medium});
+      max-width: calc(100% - #{$s-size-gutter-medium});
       border: 1px solid $s-color-black;
       position: relative;
       margin-bottom: $s-box-distance;
@@ -258,6 +272,8 @@ export default {
 
     &__text-wrapper {
       height: 100%;
+      width: 100%;
+      max-width: 100%;
       overflow: hidden;
       display: flex;
       align-items: center;

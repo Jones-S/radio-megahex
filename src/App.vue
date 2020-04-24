@@ -6,18 +6,12 @@
 </template>
 
 <script>
-import config from './config.js'
 import Header from './components/Header.vue'
 
 export default {
   name: 'app',
   components: {
     Header
-  },
-  data: () => {
-    return {
-      src: config.streamUrl
-    }
   },
   metaInfo:() => {
     const ogImageUrl = require('@/assets/og_image.jpg');

@@ -4,7 +4,7 @@
       <Logo />
       <AudioPlayer :src="src" :program="program"></AudioPlayer>
     </div>
-    <Navigation />
+    <Navigation class="Header__right" />
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapState('data', ['site']),
     program() {
-      if (!this.site || !this.site.broadcast) return '...'
+      if (!this.site || !this.site.broadcast) return ''
       return this.site.broadcast
     }
   }
@@ -44,14 +44,22 @@ export default {
   $c: 'Header';
 
   .#{$c} {
-    // height: $s-the-header-bar-height;
     display: flex;
     padding-top: $s-size-gutter-small;
     justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-start;
 
     &__left {
       display: flex;
       flex-direction: column;
+      flex: 0 1 auto;
+      min-width: 0; // https://stackoverflow.com/a/36247448/1121268
+    }
+
+    &__right {
+      flex: 0 0 auto;
+      min-height: 0; // https://stackoverflow.com/a/36247448/1121268
     }
   }
 
