@@ -13,7 +13,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import config from '../config.js'
-// import axios from 'axios'
+import BaseView from './BaseView.vue'
 import BroadcastList from '../components/BroadcastList.vue'
 import ContentBox from '../components/ContentBox.vue'
 import { connectionLineHelper } from '../mixins/helpers'
@@ -24,6 +24,7 @@ export default {
     BroadcastList,
     ContentBox
   },
+  extends: BaseView,
   mixins: [connectionLineHelper],
   data: () => {
     return {
@@ -34,7 +35,6 @@ export default {
     ...mapState('data', ['broadcasts'])
   },
   async mounted() {
-    console.log('hello')
     this.fetchBroadCastData()
   },
   methods: {

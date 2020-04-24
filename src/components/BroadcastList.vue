@@ -53,7 +53,6 @@ export default {
         }
       })
 
-      console.log('years: ', years)
       return transformMapToArrayDeep(years)
     }
   },

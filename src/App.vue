@@ -2,12 +2,14 @@
   <div id="app" :class="['App']">
     <Logo />
     <AudioPlayer :src="src" :program="program"></AudioPlayer>
+    <router-link to="/archive">Archiv</router-link>
+    <router-link to="/archive/coronista">Archiv Entry</router-link>
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import config from './config.js'
 import Logo from './components/Logo.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
@@ -24,10 +26,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('data', ['page']),
+    ...mapState('data', ['site']),
     program() {
-      if (!this.page || !this.page.content || !this.page.content.broadcast) return '...'
-      return this.page.content.broadcast
+      if (!this.site || !this.site.broadcast) return '...'
+      return this.site.broadcast
     }
   },
   metaInfo:() => {

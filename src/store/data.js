@@ -10,6 +10,7 @@ import {
 
 const state = {
   pages: [],
+  site: false,
   currentPage: false,
   broadcasts: false,
   loading: true
@@ -35,23 +36,53 @@ const actions = {
 
     const pageInStore = state.pages.find(p => p.id === path)
 
+    let page
+    let site
+
     // check if page already is in store
     if (pageInStore) {
       commit('SAVE_CURRENT_PAGE', pageInStore)
     } else {
-      const page = await dispatch('fetchPage', {
+      page = dispatch('fetchPage', {
         // lang: payload.lang,
         slug: requestPath
       })
-      commit('SAVE_CURRENT_PAGE', page)
-      commit('SAVE_PAGE_IN_STORE', page)
-      commit('SET_LOADING_DONE')
+
+      // Because we assume that the site was fetched if a page is in the store we put this in here
+      // also fetch site info
+      // example: current radio program and navigation
+      site = dispatch('fetchSite')
     }
+
+    Promise.all([page, site]).then((data) => {
+      commit('SAVE_CURRENT_PAGE', data[0])
+      commit('SAVE_PAGE_IN_STORE', data[0])
+      commit('SAVE_SITE', data[1])
+
+      commit('SET_LOADING_DONE')
+    })
+
+  },
+  async fetchSite({ state }) {
+    if (!state.site) {
+      const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/megahex` : `${config.apiBaseUrlRemote}/megahex`
+      return axios.get(url)
+        .then((response) => {
+          if (response.status === 200 && response.data) {
+            return response.data.site
+          } else {
+            console.warn('response: ', response) // eslint-disable-line
+          }
+        }, (err) => {
+          console.error(err) // eslint-disable-line
+        })
+    }
+    return true // instead of resolving a resolved promise
   },
   async fetchBroadCastData({ commit, state, dispatch}) {
     if (!state.broadcasts) {
-      const broadcasts = await dispatch('fetchBroadCasts')
-      const broadcastsMeta = await dispatch('fetchbroadcastsMeta')
+      const broadcasts = dispatch('fetchBroadCasts')
+      const broadcastsMeta = dispatch('fetchbroadcastsMeta')
 
       // first wait for the fetching promises to resolve
       Promise.all([broadcasts, broadcastsMeta]).then(values => {
@@ -65,21 +96,21 @@ const actions = {
   },
   async fetchBroadCasts() {
     return axios.get(config.recordingsUrl)
-      .then((response) => {
-        if (response.status === 200 && response.data) {
-          return response.data
-        } else {
-          console.warn('response: ', response) // eslint-disable-line
-        }
-      }, (err) => {
-        console.error(err) // eslint-disable-line
-      })
+    .then((response) => {
+      if (response.status === 200 && response.data) {
+        return response.data
+      } else {
+        console.warn('response: ', response) // eslint-disable-line
+      }
+    }, (err) => {
+      console.error(err) // eslint-disable-line
+    })
   },
   async fetchbroadcastsMeta() {
     const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/archive` : `${config.apiBaseUrlRemote}/archive`
     return axios.get(url)
-      .then((response) => {
-        if (response.status === 200 && response.data) {
+    .then((response) => {
+      if (response.status === 200 && response.data) {
           return response.data.archive_entries
         } else {
           console.warn('response: ', response) // eslint-disable-line
@@ -90,65 +121,15 @@ const actions = {
   },
   mergeArrays({}, { broadcasts, meta }) { // eslint-disable-line
     const broadcastsArray = [...broadcasts]
-    const broadcastsMeta = [...meta]
-    // const broadcastsArray = [{
-    //     'name': 'jones1.mp3',
-    //     'type': 'file',
-    //     'mtime': 'Thu, 07 Apr 2020 17:59:48 GMT',
-    //     'size': 286854928
-    //   },
-    //   {
-    //     'name': 'jones2.mp3',
-    //     'type': 'file',
-    //     'mtime': 'Thu, 09 Apr 2020 17:59:48 GMT',
-    //     'size': 286854928
-    //   },
-    //   ...broadcasts,
-    //   {
-    //     'name': 'jonesi.mp3',
-    //     'type': 'file',
-    //     'mtime': 'Thu, 09 Aug 2020 10:59:48 GMT',
-    //     'size': 286854928
-    //   },
-    //   {
-    //     'name': 'jones.mp3',
-    //     'type': 'file',
-    //     'mtime': 'Thu, 09 Dec 2021 10:59:48 GMT',
-    //     'size': 286854928
-    //   }
-    // ]
-    // const broadcastsMeta = [
-    //   ...meta,
-    //   {
-    //     "title": "Jones is in da House. Parganzi a longer title even go for itèè",
-    //     "file": "jones1.mp3",
-    //     "start_time": "14:00",
-    //     "end_time": "18:00"
-    //   },
-    //   {
-    //     "title": "Jones is in da House. Parganzi a longer title even go for ",
-    //     "file": "jones2.mp3",
-    //     "start_time": "14:00",
-    //     "end_time": "18:00"
-    //   },
-    //   {
-    //     "title": "Jones is in da House. Parganzi a longer title even go for 12",
-    //     "file": "jonesi.mp3",
-    //     "start_time": "14:00",
-    //     "end_time": "18:00"
-    //   },
-    //   {
-    //     "title": "Jones is in da House. Parganzi",
-    //     "file": "jones.mp3",
-    //     "start_time": "14:00",
-    //     "end_time": "18:00"
-    //   },
-    // ]
+    // fix filenames if suffix is missing
+    const broadcastsMeta = meta.map((item) => {
+      item.file = item.file.endsWith('.mp3') ? item.file : `${item.file}.mp3`
+      return item
+    })
     const mergedArray = mergeArraysByValue(broadcastsArray, broadcastsMeta, 'name', 'file')
 
     // Filter those out which don't have any metadata
     return mergedArray.filter(item => item.title)
-
   },
   async fetchPage({}, { slug }) { // eslint-disable-line
     const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/rest/pages/${slug}/` : `${config.apiBaseUrlRemote}/rest/pages/${slug}/`
@@ -182,6 +163,9 @@ const mutations = {
   },
   SAVE_PAGE_IN_STORE(state, page) {
     state.pages.push(page)
+  },
+  SAVE_SITE(state, site) {
+    state.site = site
   },
   SAVE_BROADCASTS(state, data) {
     state.broadcasts = data

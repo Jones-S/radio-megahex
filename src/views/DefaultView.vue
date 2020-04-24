@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
+import BaseView from './BaseView.vue'
 import Paragraph from '../components/Paragraph.vue'
 import TwitchEmbed from '../components/TwitchEmbed.vue'
 import Loader from '../components/Loader.vue'
@@ -60,6 +61,7 @@ export default {
     ContentBox,
     Heading
   },
+  extends: BaseView,
   mixins: [connectionLineHelper],
   data: () => {
     return {
@@ -85,7 +87,6 @@ export default {
       if (!this.page || !this.page.content || !this.page.content.date) return false
       // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
       const date = this.page.content.date.replace('&#160;', 'T')
-      console.log('date: ', date)
       return format(new Date(date), 'yyyy-MM-dd')
     },
     time() {
@@ -99,20 +100,8 @@ export default {
       return `${config.recordingsUrl}${this.page.content.filename}`
     }
   },
-  watch: {
-    // call again the method if the route changes
-    $route: function(oldRoute, newRoute) {
-      this.fetchData(newRoute)
-    }
-  },
-  created () {
-    this.fetchData(this.$route)
-  },
   mounted() {
     this.$forceUpdate()
-  },
-  methods: {
-    ...mapActions('data', ['fetchData']),
   }
 }
 </script>
