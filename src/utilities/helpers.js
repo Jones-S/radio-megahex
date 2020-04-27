@@ -1,3 +1,6 @@
+import cloneDeep from 'lodash.clonedeep'
+
+
 /**
  * Remove leading slash.
  *
@@ -116,4 +119,32 @@ export function transformMapToArrayDeep(map) {
 
 export function isHomeSlug(slug, homeSlug = 'home') {
   return slug === homeSlug
+}
+
+/**
+ * sort by date
+ * @param  {array} data
+ * @param  {string} key – which property contains the date. This date should represent an ISO time format like "2020-04-18T20:30:00Z"
+ * @param  {string} order – DESC or ASC. DESC: newest are first in array
+ *
+ */
+
+export function sortByDate(data, key, order = 'DESC') {
+  let posts = cloneDeep(data)
+
+  return posts.sort(function (a, b) {
+    const dateA = new Date(a[key])
+    const dateB = new Date(b[key])
+
+    if (dateA !== dateB) {
+      //  1: sort b to an index lower than a => b comes first.
+      // -1: sort a to an index lower than b => a comes first.
+      if (dateA > dateB) {
+        return order === 'ASC' ? 1 : -1
+      } else if (dateA < dateB) {
+        return order === 'ASC' ? -1 : 1
+      }
+    }
+    return 0 // returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
+  })
 }

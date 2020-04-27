@@ -11,7 +11,7 @@
 
 <script>
 import BroadcastEntry from './BroadcastEntry.vue'
-import { transformMapToArrayDeep } from '../utilities/helpers'
+import { transformMapToArrayDeep, sortByDate } from '../utilities/helpers'
 import { de } from 'date-fns/locale'
 import { format } from 'date-fns'
 
@@ -28,8 +28,16 @@ export default {
   },
   computed: {
     broadcastsDividedInMonths() {
+      // filter out the ones that don't have a date
+      const filteredBroadcasts = this.broadcasts.filter((show) => {
+        return show.date
+      })
+
+      // first sort by date
+      const sortedBroadcasts = sortByDate(filteredBroadcasts, 'date', 'DESC')
+
       const years = new Map
-      this.broadcasts.forEach(show => {
+      sortedBroadcasts.forEach(show => {
         if (show.date) {
           const date = new Date(show.date)
           // const date = new Date(show.mtime).toUTCString()
@@ -56,16 +64,19 @@ export default {
       return transformMapToArrayDeep(years)
     }
   },
+  mounted() {
+  },
   methods: {
     getMonthName(monthNumber) {
       // Cheap version to get month name, just set a random date and only read out the month
-      return format(new Date(2000, monthNumber, 1), 'MMMM', { locale: de })
+      const fakeDate = new Date(2000, monthNumber, 1)
+      return format(fakeDate, 'MMMM', { locale: de })
     },
     isLastOfDay(index, items) {
       if (index === items.length - 1) return true
       if (index === 0) return false
-      const currentDate = new Date(items[index].mtime).getUTCDate()
-      const lastDate = new Date(items[index + 1].mtime).getUTCDate()
+      const currentDate = new Date(items[index].date).getUTCDate()
+      const lastDate = new Date(items[index + 1].date).getUTCDate()
       if (lastDate !== currentDate) return true
       return false
     }
