@@ -53,7 +53,7 @@ export default {
     &__left {
       display: flex;
       flex-direction: column;
-      flex: 0 1 auto;
+      flex: 1 1 auto;
       min-width: 0; // https://stackoverflow.com/a/36247448/1121268
     }
 

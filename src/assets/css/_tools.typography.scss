@@ -53,10 +53,10 @@
 @mixin font-style-heading-base {
   @include font-style-base;
   font-family: $s-font-family-extra;
-  font-size: $s-fz-19;
+  font-size: $s-fz-14;
 
   @include mq($from: medium) {
-    font-size: $s-fz-30;
+    font-size: $s-fz-19;
   }
 }
 
