@@ -42,7 +42,8 @@
       "eslint:recommended"
     ],
     "rules": {
-      "no-console": "off"
+      "no-console": "off",
+      "vue/no-unused-components": "warn"
     },
     "parserOptions": {
       "parser": "babel-eslint"

@@ -25,14 +25,14 @@
 </template>
 
 <script>
-import { VBreakpoint } from 'vue-breakpoint-component'
+// import { VBreakpoint } from 'vue-breakpoint-component'
 import { mapActions, mapGetters } from 'vuex'
 import { isHomeSlug } from '../utilities/helpers'
 
 export default {
   name: 'Navigation',
   components: {
-    VBreakpoint
+    // VBreakpoint
   },
   computed: {
     ...mapGetters('data', ['getMenu']),

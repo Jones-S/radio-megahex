@@ -3,7 +3,7 @@
     <v-breakpoint>
       <div slot-scope="scope" v-if="scope.viewportWidth">
         <div v-if="scope.viewportWidth > 800">
-          <FloatingElement v-for="(image, index) in images" :key="index" :src="image.url">
+          <FloatingElement v-for="(image) in images" :key="image.url" :src="image.url">
             <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
           </FloatingElement>
           <!-- Proof of Concept for using any element as draggable item -->
@@ -20,25 +20,20 @@
 </template>
 
 <script>
-import { VBreakpoint } from 'vue-breakpoint-component'
 import FloatingElement from './FloatingElement.vue'
 import ColoredImage from './ColoredImage.vue'
-// import Paragraph from './Paragraph.vue'
 
 export default {
   name: 'FloatingImages',
   components: {
-    // Paragraph,
     ColoredImage,
     FloatingElement,
-    VBreakpoint
   },
   props: {
     images: {
       type: Array,
-      required: true,
-      default: () => []
-    }
+      required: true
+    },
   }
 }
 </script>
