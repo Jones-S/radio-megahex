@@ -148,3 +148,23 @@ export function sortByDate(data, key, order = 'DESC') {
     return 0 // returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
   })
 }
+
+export function sortByNumber(data, key, order = 'DESC') {
+  let posts = cloneDeep(data)
+
+  return posts.sort(function (a, b) {
+    const propA = a[key]
+    const propB = b[key]
+
+    if (propA !== propB) {
+      //  1: sort b to an index lower than a => b comes first.
+      // -1: sort a to an index lower than b => a comes first.
+      if (propA > propB) {
+        return order === 'ASC' ? 1 : -1
+      } else if (propA < propB) {
+        return order === 'ASC' ? -1 : 1
+      }
+    }
+    return 0 // returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
+  })
+}

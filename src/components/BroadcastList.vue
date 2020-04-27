@@ -11,7 +11,7 @@
 
 <script>
 import BroadcastEntry from './BroadcastEntry.vue'
-import { transformMapToArrayDeep, sortByDate } from '../utilities/helpers'
+import { transformMapToArrayDeep, sortByDate, sortByNumber } from '../utilities/helpers'
 import { de } from 'date-fns/locale'
 import { format } from 'date-fns'
 
@@ -61,13 +61,21 @@ export default {
         }
       })
 
-      // within a month we want to reverse the order
+      console.log('transformMapToArrayDeep(years): ', transformMapToArrayDeep(years))
+
+      // depending on the browser a Map is sorted differently, so we need to sort things correctly
       let arrayFromMap = transformMapToArrayDeep(years)
+      arrayFromMap = sortByNumber(arrayFromMap, 'name', 'DESC')
+
+      console.log('arrayFromMap: ', arrayFromMap)
       arrayFromMap.forEach(year => {
         year.items.forEach(month => {
-          month.items.reverse() // reverse Array order within the entries per month
+          month.items = sortByDate(month.items, 'date', 'DESC')
         })
+        year.items = sortByNumber(year.items, 'name', 'DESC')
       })
+
+      console.log('arrayFromMap: ', arrayFromMap)
 
       return arrayFromMap
     }
