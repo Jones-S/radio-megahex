@@ -168,3 +168,20 @@ export function sortByNumber(data, key, order = 'DESC') {
     return 0 // returns 0, leave a and b unchanged with respect to each other, but sorted with respect to all different elements.
   })
 }
+
+export function convertLocalDateToUTC(date) {
+  console.log('date: ', date)
+  console.log('getFullYear(): ', date.getUTCFullYear())
+  console.log('getMonth(): ', date.getUTCMonth())
+  console.log('getDate(): ', date.getUTCDate())
+  console.log('getHours(): ', date.getUTCHours())
+  console.log('getMinutes(): ', date.getUTCMinutes())
+  console.log('getSeconds(): ', date.getUTCSeconds())
+  console.log('getMilliseconds(): ', date.getUTCMilliseconds())
+  console.log('offset(): ', date.getTimezoneOffset())
+
+  const timezoneOffset = date.getTimezoneOffset()
+
+  const utcTime = new Date(date.getTime() + timezoneOffset * 60000)
+  return utcTime  
+}

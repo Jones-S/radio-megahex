@@ -10,6 +10,7 @@
 
 <script>
 import { format } from 'date-fns'
+import { convertLocalDateToUTC } from '../utilities/helpers'
 
 export default {
   name: 'BroadcastEntry',
@@ -36,13 +37,18 @@ export default {
     },
     date() {
       if (!this.data.date) return false
-      const date = this.data.date.replace('&#160;', 'T')
-      return format(new Date(date), 'yyyy-MM-dd')
+      const dateString = this.data.date.replace('&#160;', 'T')
+      const date = new Date(dateString)
+      return format(date, 'yyyy-MM-dd')
     },
     time() {
       if (!this.data.date) return false
+      console.log('this.data.date: ', this.data.date)
       const date = this.data.date.replace('&#160;', 'T')
-      const starttime = format(new Date(date), 'HH:mm')
+      const utcDate = convertLocalDateToUTC(new Date(date))
+      console.log('utcDate: ', utcDate)
+      console.log('-------------')
+      const starttime = format(new Date(utcDate), 'HH:mm')
       return `${starttime}—${this.data.end_time}`
     }
   }

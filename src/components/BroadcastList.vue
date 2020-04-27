@@ -61,21 +61,16 @@ export default {
         }
       })
 
-      console.log('transformMapToArrayDeep(years): ', transformMapToArrayDeep(years))
-
       // depending on the browser a Map is sorted differently, so we need to sort things correctly
       let arrayFromMap = transformMapToArrayDeep(years)
       arrayFromMap = sortByNumber(arrayFromMap, 'name', 'DESC')
 
-      console.log('arrayFromMap: ', arrayFromMap)
       arrayFromMap.forEach(year => {
         year.items.forEach(month => {
           month.items = sortByDate(month.items, 'date', 'DESC')
         })
         year.items = sortByNumber(year.items, 'name', 'DESC')
       })
-
-      console.log('arrayFromMap: ', arrayFromMap)
 
       return arrayFromMap
     }
