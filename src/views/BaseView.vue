@@ -6,11 +6,18 @@ export default {
   data: () => {
     return {
       minCol: 7,
-      maxCol: 12,
+      maxCol: 12
     }
   },
   computed: {
     ...mapGetters('data', ['page']),
+    title() {
+      console.log('this.page: ', this.page)
+      return this.page ? this.page.title : 'Radio Megahex'
+    },
+    metaDesc() {
+      return this.page && this.page.content && this.page.content.metadesc ? this.page.content.metadesc : 'Megahex.fm – Internetradio aus Zureich'
+    }
   },
   watch: {
     // call again the method if the route changes
@@ -23,6 +30,25 @@ export default {
   },
   methods: {
     ...mapActions('data', ['fetchData']),
+  },
+  metaInfo() {
+    const ogImageUrl = require('@/assets/og_image.jpg');
+    console.log('this.title: ', this.title)
+    return {
+      title: this.title,
+      htmlAttrs: {
+        // reptilian: 'gator'
+      },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'description', content: this.metaDesc },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { property: 'og:image', content: ogImageUrl },
+        { name: 'og:image:width', content: 642 },
+        { name: 'og:image:height', content: 640 },
+        { name: 'og:image:alt', content: this.metaDesc }
+      ]
+    }
   }
 }
 </script>

@@ -12,25 +12,7 @@ export default {
   name: 'app',
   components: {
     Header
-  },
-  metaInfo:() => {
-    const ogImageUrl = require('@/assets/og_image.jpg');
-    return {
-      title: 'Radio Megahex',
-      htmlAttrs: {
-        // reptilian: 'gator'
-      },
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'description', content: 'Megahex.fm – Internetradio vom Feinsten' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { property: 'og:image', content: ogImageUrl },
-        { name: 'og:image:width', content: 642 },
-        { name: 'og:image:height', content: 640 },
-        { name: 'og:image:alt', content: 'Megahex.fm – Internetradio vom Feinsten' }
-      ]
-    }
-  },
+  }
 }
 </script>
 

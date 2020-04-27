@@ -43,11 +43,8 @@ export default {
     },
     time() {
       if (!this.data.date) return false
-      console.log('this.data.date: ', this.data.date)
       const date = this.data.date.replace('&#160;', 'T')
       const utcDate = convertLocalDateToUTC(new Date(date))
-      console.log('utcDate: ', utcDate)
-      console.log('-------------')
       const starttime = format(new Date(utcDate), 'HH:mm')
       return `${starttime}—${this.data.end_time}`
     }
