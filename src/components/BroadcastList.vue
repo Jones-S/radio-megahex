@@ -61,7 +61,15 @@ export default {
         }
       })
 
-      return transformMapToArrayDeep(years)
+      // within a month we want to reverse the order
+      let arrayFromMap = transformMapToArrayDeep(years)
+      arrayFromMap.forEach(year => {
+        year.items.forEach(month => {
+          month.items.reverse() // reverse Array order within the entries per month
+        })
+      })
+
+      return arrayFromMap
     }
   },
   mounted() {
@@ -74,7 +82,6 @@ export default {
     },
     isLastOfDay(index, items) {
       if (index === items.length - 1) return true
-      if (index === 0) return false
       const currentDate = new Date(items[index].date).getUTCDate()
       const lastDate = new Date(items[index + 1].date).getUTCDate()
       if (lastDate !== currentDate) return true
