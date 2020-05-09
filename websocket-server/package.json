@@ -1,0 +1,19 @@
+{
+  "name": "websocket-server",
+  "version": "1.0.0",
+  "description": "Websockets server for megahex publishing",
+  "main": "index.js",
+  "author": "Jonas Scheiwiller",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "serve": "babel-node -- index.js"
+  },
+  "dependencies": {
+    "ws": "^7.2.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7"
+  }
+}

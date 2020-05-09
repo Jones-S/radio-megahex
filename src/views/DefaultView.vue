@@ -33,6 +33,7 @@
     <ContentBox v-if="channel">
       <TwitchEmbed :channel="channel"></TwitchEmbed>
     </ContentBox>
+    <WebsocketManager />
   </div>
 </template>
 
@@ -40,6 +41,7 @@
 import { mapGetters } from 'vuex'
 import BaseView from './BaseView.vue'
 import Paragraph from '../components/Paragraph.vue'
+import WebsocketManager from '../components/WebsocketManager.vue'
 import TwitchEmbed from '../components/TwitchEmbed.vue'
 import Loader from '../components/Loader.vue'
 import Heading from '../components/Heading.vue'
@@ -57,6 +59,7 @@ export default {
     Loader,
     TwitchEmbed,
     FloatingImages,
+    WebsocketManager,
     Paragraph,
     ContentBox,
     Heading

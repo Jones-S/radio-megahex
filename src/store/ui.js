@@ -10,6 +10,10 @@ const actions = {
   setTopFloatingElement() {
     // action does nothing, components can subscribe to it
   },
+  displayReceivedImage({ commit }, imgUrl) { // eslint-disable-line
+    console.log('imgUrl: ', imgUrl)
+    // action does nothing, components can subscribe to it
+  },
   toggleMenu({ commit }) {
     commit('TOGGLE_MENU')
   },
