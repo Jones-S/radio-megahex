@@ -86,7 +86,7 @@ export default {
   async mounted() {
     // if we have an image we need to calculate the image size
     if (this.src) {
-      const initialSize = await this.setInitialSize(this.src)
+      const initialSize = await this.setInitialSize(this.src, this.options?.width)
       this.initialWidth = initialSize.initialWidth
       this.initialHeight = initialSize.initialHeight
       const initialPosition = this.setInitialPosition(this.initialWidth, this.initialHeight, this.distanceToTop)
@@ -112,11 +112,11 @@ export default {
     })
 
   },
-beforeDestroy () {
-  if(this.$el.parentNode) {
-    this.$el.parentNode.removeChild(this.$el)
-  }
-},
+  beforeDestroy () {
+    if(this.$el.parentNode) {
+      this.$el.parentNode.removeChild(this.$el)
+    }
+  },
   methods: {
     ...mapActions('ui', ['setTopFloatingElement']),
     resize(newRect) {

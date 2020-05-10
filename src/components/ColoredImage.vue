@@ -1,6 +1,6 @@
 <template>
-  <div class="ColoredImage" :style="`background-color: ${imageBackgroundColor};`">
-    <img class="ColoredImage__img" :srcset="srcSet" :alt="alt" />
+  <div v-if="src || srcSet" class="ColoredImage" :style="`background-color: ${imageBackgroundColor};`">
+    <img class="ColoredImage__img" :srcset="srcSet" :alt="alt" :src="src" />
   </div>
 </template>
 
@@ -10,8 +10,13 @@ export default {
   props: {
     srcSet: {
       type: String,
-      required: true,
+      required: false,
       default: ''
+    },
+    src: {
+      type: [String, Boolean],
+      required: false,
+      default: false
     },
     alt: {
       type: String,

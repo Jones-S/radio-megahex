@@ -1,5 +1,6 @@
 const state = {
-  navMenuOpen: false
+  navMenuOpen: false,
+  currentImageUrl: false
 }
 
 // actions
@@ -10,9 +11,9 @@ const actions = {
   setTopFloatingElement() {
     // action does nothing, components can subscribe to it
   },
-  displayReceivedImage({ commit }, imgUrl) { // eslint-disable-line
-    console.log('imgUrl: ', imgUrl)
-    // action does nothing, components can subscribe to it
+  saveReceivedImage({ commit }, payload) { // eslint-disable-line
+    // save image in store, in case client reconnects to server
+    commit('SAVE_CURRENT_IMAGE', payload)
   },
   toggleMenu({ commit }) {
     commit('TOGGLE_MENU')
@@ -32,6 +33,9 @@ const mutations = {
     state.navMenuOpen = false
     // noScroll.off()
   },
+  SAVE_CURRENT_IMAGE(state, imgUrl) {
+    state.currentImageUrl = imgUrl
+  }
 }
 
 const getters = {

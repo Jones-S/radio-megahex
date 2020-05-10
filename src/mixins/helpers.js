@@ -35,7 +35,7 @@ export const connectionLineHelper = {
 
 export const draggableImageHelper = {
   methods: {
-    async setInitialSize(src) {
+    async setInitialSize(src, width) {
       // Create image programmatically (use promises to use async await)
       const imageDimensions = await this.addImageProcess(src)
 
@@ -51,7 +51,7 @@ export const draggableImageHelper = {
       const maxWidth = smallerWindowSideSize / 3
 
       // set randomized initial size
-      const initialWidth = getRandomInt(150, maxWidth)
+      const initialWidth = width || getRandomInt(150, maxWidth)
       const initialHeight = initialWidth / aspectRatio
       return { initialWidth, initialHeight }
     },
