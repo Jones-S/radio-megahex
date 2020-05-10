@@ -16,27 +16,21 @@
         </router-link>
       </li>
     </ul>
-    <v-breakpoint>
-      <div slot-scope="scope" v-if="scope.viewportWidth">
-        <button v-if="scope.viewportWidth < 430" class="Navigation__menu-button" @click="toggleMenu">{{ navMenuOpen ? 'X Menu' : 'Open Menu'}}</button>
-      </div>
-    </v-breakpoint>
+    <button v-if="breakpointCurrent.innerWidth < 430" class="Navigation__menu-button" @click="toggleMenu">{{ navMenuOpen ? 'X Menu' : 'Open Menu'}}</button>
+    <VBreakpoint @input="updateBreakpoint($event)" />
   </div>
 </template>
 
 <script>
-// import { VBreakpoint } from 'vue-breakpoint-component'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { isHomeSlug } from '../utilities/helpers'
 
 export default {
   name: 'Navigation',
-  components: {
-    // VBreakpoint
-  },
   computed: {
     ...mapGetters('data', ['getMenu']),
     ...mapGetters('ui', ['navMenuOpen']),
+    ...mapState('ui', ['breakpointCurrent']),
     menu() {
       return this.getMenu
     }
@@ -67,6 +61,11 @@ export default {
         // Esc key
         this.closeMenu()
       }
+    },
+    updateBreakpoint(breakpoint) {
+      // save breakpoint to store to use in as many components as we want
+      // https://github.com/adi518/vue-breakpoint-component/issues/24
+      this.$store.commit('ui/UPDATE_BREAKPOINT', breakpoint)
     }
   }
 }

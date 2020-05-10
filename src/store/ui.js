@@ -1,5 +1,6 @@
 const state = {
-  navMenuOpen: false
+  navMenuOpen: false,
+  breakpointCurrent: false
 }
 
 // actions
@@ -27,6 +28,10 @@ const mutations = {
   CLOSE_MENU(state) {
     state.navMenuOpen = false
     // noScroll.off()
+  },
+  UPDATE_BREAKPOINT(state, breakpoint) {
+    // Save current breakpoint
+    state.breakpointCurrent = breakpoint
   },
 }
 

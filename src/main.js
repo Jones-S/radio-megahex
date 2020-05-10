@@ -5,14 +5,13 @@ import LoadScript from 'vue-plugin-load-script'
 import router from './router'
 import store from './store'
 
-import { VBreakpoint } from 'vue-breakpoint-component'
+import { VBreakpoint } from './plugins/vue-breakpoint'
 
 Vue.config.productionTip = false
 Vue.use(VueMeta)
 Vue.use(LoadScript)
 
-Vue.component('v-breakpoint', VBreakpoint)
-
+Vue.component('VBreakpoint', VBreakpoint)
 
 new Vue({
   router,

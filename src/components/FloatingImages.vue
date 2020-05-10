@@ -1,25 +1,22 @@
 <template>
   <div class="FloatingImages">
-    <v-breakpoint>
-      <div slot-scope="scope" v-if="scope.viewportWidth">
-        <div v-if="scope.viewportWidth > 800">
-          <FloatingElement v-for="(image) in images" :key="image.url" :src="image.url">
-            <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
-          </FloatingElement>
-          <!-- Proof of Concept for using any element as draggable item -->
-          <!-- <FloatingElement :options="{ width: 300, height: 250 }">
-            <Paragraph ref="paragraph" :content="'Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge'"/>
-          </FloatingElement> -->
-        </div>
-        <div v-else>
-          <ColoredImage v-for="(image, index) in images" :key="index" :src-set="image.srcset" :alt="'megahex'" />
-        </div>
-      </div>
-    </v-breakpoint>
+    <div v-if="breakpointCurrent.innerWidth > 800">
+      <FloatingElement v-for="(image) in images" :key="image.url" :src="image.url">
+        <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
+      </FloatingElement>
+      <!-- Proof of Concept for using any element as draggable item -->
+      <!-- <FloatingElement :options="{ width: 300, height: 250 }">
+        <Paragraph ref="paragraph" :content="'Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge, Ein Text ist nicht zu verachten, mein Junge'"/>
+      </FloatingElement> -->
+    </div>
+    <div v-else>
+      <ColoredImage v-for="(image, index) in images" :key="index" :src-set="image.srcset" :alt="'megahex'" />
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import FloatingElement from './FloatingElement.vue'
 import ColoredImage from './ColoredImage.vue'
 
@@ -34,6 +31,9 @@ export default {
       type: Array,
       required: true
     },
+  },
+  computed: {
+    ...mapState('ui', ['breakpointCurrent'])
   }
 }
 </script>
