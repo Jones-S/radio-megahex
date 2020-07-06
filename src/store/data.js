@@ -81,9 +81,9 @@ const actions = {
         })
     }
   },
-  async fetchBroadCastData({ commit, state, dispatch}) {
+  async fetchBroadcastData({ commit, state, dispatch}) {
     if (!state.broadcasts) {
-      const broadcasts = dispatch('fetchBroadCasts')
+      const broadcasts = dispatch('fetchBroadcasts')
       const broadcastsMeta = dispatch('fetchbroadcastsMeta')
 
       // first wait for the fetching promises to resolve
@@ -96,7 +96,7 @@ const actions = {
       })
     }
   },
-  async fetchBroadCasts() {
+  async fetchBroadcasts() {
     return axios.get(config.recordingsUrl)
     .then((response) => {
       if (response.status === 200 && response.data) {

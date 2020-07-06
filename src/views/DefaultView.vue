@@ -97,7 +97,15 @@ export default {
     },
     file() {
       if (!this.page || !this.page.content || !this.page.content.filename) return false
-      return `${config.recordingsUrl}${this.page.content.filename}`
+      let filename = this.page.content.filename
+      // if the filename contains a full path we want to just return that
+      if (filename.startsWith('https')) {
+        return filename
+      }
+      // also check if the filename has a file suffix
+      filename = filename.endsWith('.mp3') ? filename : `${filename}.mp3`
+      // but normally we just have the filename and want to return a full path
+      return `${config.recordingsUrl}${filename}`
     }
   },
   mounted() {

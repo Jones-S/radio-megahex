@@ -35,10 +35,10 @@ export default {
     ...mapState('data', ['broadcasts'])
   },
   async mounted() {
-    this.fetchBroadCastData()
+    this.fetchBroadcastData()
   },
   methods: {
-    ...mapActions('data', ['fetchBroadCastData']),
+    ...mapActions('data', ['fetchBroadcastData']),
   }
 }
 </script>
