@@ -1,7 +1,6 @@
-import {
-  removeLeadingSlash,
-  removeTrailingSlash
-} from '../utilities/helpers'
+import { removeLeadingSlash, removeTrailingSlash } from '../utilities/helpers'
+import { sanitizeFilterData } from '../utilities/sanitizeData'
+import { mapFormats } from '../utilities/mapData'
 import axios from 'axios'
 import config from '../config'
 import {
@@ -13,7 +12,8 @@ const state = {
   site: false,
   currentPage: false,
   broadcasts: false,
-  loading: true
+  loading: true,
+  filterData: false
 }
 
 // actions
@@ -81,7 +81,7 @@ const actions = {
         })
     }
   },
-  async fetchBroadcastData({ commit, state, dispatch}) {
+  async fetchBroadcastData({ commit, state, dispatch }) {
     if (!state.broadcasts) {
       const broadcasts = dispatch('fetchBroadcasts')
       const broadcastsMeta = dispatch('fetchbroadcastsMeta')
@@ -94,6 +94,27 @@ const actions = {
           commit('SAVE_BROADCASTS', mergedArrays)
         })
       })
+    }
+  },
+  async fetchFilterData({ commit, state }) {
+    if (!state.filterData) {
+      const filterData = await axios.get(`${config.apiBaseUrlRemote}/filter`)
+        .then((response) => {
+          if (response.status === 200 && response.data) {
+            return response.data
+          } else {
+            console.warn('response: ', response) // eslint-disable-line
+          }
+        }, (err) => {
+          console.error(err) // eslint-disable-line
+        })
+
+      const sanitizedFilterData = {
+        formats: mapFormats(sanitizeFilterData(filterData.formats)),
+        tags: sanitizeFilterData(filterData.tags),
+      }
+
+      commit('SAVE_FILTER_DATA', sanitizedFilterData)
     }
   },
   async fetchBroadcasts() {
@@ -168,6 +189,9 @@ const mutations = {
   },
   SAVE_SITE(state, site) {
     state.site = site
+  },
+  SAVE_FILTER_DATA(state, data) {
+    state.filterData = data
   },
   SAVE_BROADCASTS(state, data) {
     state.broadcasts = data
