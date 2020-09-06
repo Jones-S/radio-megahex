@@ -1,6 +1,7 @@
 const state = {
   navMenuOpen: false,
-  breakpointCurrent: false
+  breakpointCurrent: false,
+  archiveFilter: false
 }
 
 // actions
@@ -13,6 +14,9 @@ const actions = {
   },
   toggleMenu({ commit }) {
     commit('TOGGLE_MENU')
+  },
+  setArchiveFilter({ commit }, data) {
+    commit('SAVE_ARCHIVE_FILTER', data)
   },
   closeMenu({ commit, state }) {
     if (state.navMenuOpen) commit('CLOSE_MENU')
@@ -32,6 +36,9 @@ const mutations = {
   UPDATE_BREAKPOINT(state, breakpoint) {
     // Save current breakpoint
     state.breakpointCurrent = breakpoint
+  },
+  SAVE_ARCHIVE_FILTER(state, data) {
+    state.archiveFilter = data
   },
 }
 

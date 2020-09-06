@@ -1,6 +1,6 @@
 <template>
   <fieldset
-    class="FormFieldSelect FormFieldSelect__fieldset"
+    class="FormFieldSelect"
   >
     <label class="FormFieldSelect__field">
       <span class="FormFieldSelect__label">{{ label }}</span>
@@ -50,6 +50,6 @@ export default {
   $c: 'FormFieldSelect';
 
   .#{$c} {
-
+    @include fieldset;
   }
 </style>

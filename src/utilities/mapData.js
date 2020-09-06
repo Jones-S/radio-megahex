@@ -14,6 +14,10 @@ const formatsMap = {
  * Kirby exports select fields only as values and not as text. So we need to save that value...
  */
 export function mapFormats(data) {
+  if (!data) {
+    console.warn('Your filter formats are undefined: ', data)
+    return []
+  }
   return data.map(format => {
     return {
       slug: format,

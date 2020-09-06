@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import config from '../config.js'
 import BaseView from './BaseView.vue'
 import BroadcastList from '../components/BroadcastList.vue'
@@ -35,7 +35,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('data', ['broadcasts'])
+    ...mapGetters('data', ['broadcasts'])
   },
   async mounted() {
     this.fetchBroadcastData()

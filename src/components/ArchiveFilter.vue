@@ -1,5 +1,6 @@
 <template>
   <div class="ArchiveFilter">
+    <Heading :level="3" class="ArchiveFilter__title">Filter</Heading>
     <form
       ref="form"
       class="ArchiveFilter__form"
@@ -17,13 +18,14 @@
 import { mapActions, mapState } from 'vuex'
 import FormFieldSelect from './FormFieldSelect.vue'
 import FormFieldCheckbox from './FormFieldCheckbox.vue'
-
+import Heading from './Heading.vue'
 
 export default {
   name: 'ArchiveFilter',
   components: {
     FormFieldCheckbox,
-    FormFieldSelect
+    FormFieldSelect,
+    Heading
   },
   data: () => {
     return {
@@ -36,8 +38,9 @@ export default {
   methods: {
     ...mapActions('data', ['fetchFilterData']),
     submit() {
-      console.log('submit',this.formData)
-      this.$emit('submit', this.formData)
+      this.$store.dispatch('ui/setArchiveFilter', {
+        data: this.formData
+      })
     },
     updateFormData(value, name) {
       this.formData[name] = value
@@ -63,13 +66,15 @@ export default {
     },
     tags() {
       if (!this.filterData.tags) return false
-      return this.filterData.tags.map(tag => {
-        return {
-          value: tag,
-          option: tag,
-          checked: false
-        }
-      })
+      return this.filterData.tags
+        .filter(tag => tag.length > 1) // remove accidental filters with just 1 character
+        .map(tag => {
+          return {
+            value: tag,
+            option: tag,
+            checked: false
+          }
+        })
     }
   }
 
@@ -82,6 +87,12 @@ export default {
   $c: 'ArchiveFilter';
 
   .#{$c} {
+    margin-bottom: $s-size-spacer-medium;
 
+  // Overriding scoped child components with /deep/
+  // https://bambielli.com/til/2018-08-19-how-to-target-child-components-with-scoped-css-in-vue/
+  /deep/ .Heading {
+    color: $s-color-white;
+  }
   }
 </style>

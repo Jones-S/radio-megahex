@@ -1,5 +1,4 @@
 import { removeLeadingSlash, removeTrailingSlash } from '../utilities/helpers'
-import { sanitizeFilterData } from '../utilities/sanitizeData'
 import { mapFormats } from '../utilities/mapData'
 import axios from 'axios'
 import config from '../config'
@@ -98,7 +97,8 @@ const actions = {
   },
   async fetchFilterData({ commit, state }) {
     if (!state.filterData) {
-      const filterData = await axios.get(`${config.apiBaseUrlRemote}/filter`)
+      const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlRemote}/filter` : `${config.apiBaseUrlRemote}/filter`
+      const filterData = await axios.get(url)
         .then((response) => {
           if (response.status === 200 && response.data) {
             return response.data
@@ -110,8 +110,8 @@ const actions = {
         })
 
       const sanitizedFilterData = {
-        formats: mapFormats(sanitizeFilterData(filterData.formats)),
-        tags: sanitizeFilterData(filterData.tags),
+        formats: mapFormats(filterData.formats),
+        tags: filterData.tags,
       }
 
       commit('SAVE_FILTER_DATA', sanitizedFilterData)
@@ -130,7 +130,7 @@ const actions = {
     })
   },
   async fetchbroadcastsMeta() {
-    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/archive` : `${config.apiBaseUrlRemote}/archive`
+    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlRemote}/archive` : `${config.apiBaseUrlRemote}/archive`
     return axios.get(url)
     .then((response) => {
       if (response.status === 200 && response.data) {
@@ -205,6 +205,14 @@ const getters = {
   },
   getMenu: state => {
     return state.site && state.site.navigation ? state.site.navigation : false
+  },
+  // return filtered broadcasts by checking archiveFilter from ui store
+  broadcasts: (state, rootState) => {
+    if (!rootState || !rootState.ui || !rootState.ui.archiveFilter) return state.broadcasts
+    // filter broadcasts
+    return state.broadcasts.filter(broadcast => {
+      return broadcast
+    })
   }
 }
 

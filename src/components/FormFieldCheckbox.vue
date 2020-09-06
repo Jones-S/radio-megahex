@@ -1,5 +1,5 @@
 <template>
-  <fieldset ref="fieldset" class="FormFieldChecbox">
+  <fieldset ref="fieldset" class="FormFieldCheckbox">
     <legend class="FormFieldCheckbox__label">
       {{ label }}
     </legend>
@@ -103,6 +103,6 @@ export default {
   $c: 'FormFieldCheckbox';
 
   .#{$c} {
-
+    @include fieldset;
   }
 </style>
