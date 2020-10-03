@@ -1,7 +1,12 @@
 const state = {
   navMenuOpen: false,
   breakpointCurrent: false,
-  archiveFilter: false
+  archiveFilter: {
+    data: {
+      tags: [],
+      format: false
+    }
+  }
 }
 
 // actions

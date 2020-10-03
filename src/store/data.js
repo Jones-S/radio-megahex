@@ -80,6 +80,16 @@ const actions = {
         })
     }
   },
+  async fetchArchive({ dispatch }) {
+    dispatch('fetchBroadcastData')
+    // because MAMP is unable to cope too many simultaneous requests we add a one tick timeout to postpone things a bit
+    // no idea if this is a problem on the remote server...
+    const timeoutDuration = process.env.NODE_ENV === 'development' ? 100 : 1
+    setTimeout(async() => {
+      console.log('fetching filter data a bit later...')
+      dispatch('fetchFilterData')
+    }, timeoutDuration)
+  },
   async fetchBroadcastData({ commit, state, dispatch }) {
     if (!state.broadcasts) {
       const broadcasts = dispatch('fetchBroadcasts')
@@ -97,7 +107,7 @@ const actions = {
   },
   async fetchFilterData({ commit, state }) {
     if (!state.filterData) {
-      const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlRemote}/filter` : `${config.apiBaseUrlRemote}/filter`
+      const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/filter` : `${config.apiBaseUrlRemote}/filter`
       const filterData = await axios.get(url)
         .then((response) => {
           if (response.status === 200 && response.data) {
@@ -130,7 +140,7 @@ const actions = {
     })
   },
   async fetchbroadcastsMeta() {
-    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlRemote}/archive` : `${config.apiBaseUrlRemote}/archive`
+    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/archive` : `${config.apiBaseUrlRemote}/archive`
     return axios.get(url)
     .then((response) => {
       if (response.status === 200 && response.data) {
@@ -207,12 +217,26 @@ const getters = {
     return state.site && state.site.navigation ? state.site.navigation : false
   },
   // return filtered broadcasts by checking archiveFilter from ui store
-  broadcasts: (state, rootState) => {
+  broadcasts: (state, getters, rootState) => {
     if (!rootState || !rootState.ui || !rootState.ui.archiveFilter) return state.broadcasts
-    // filter broadcasts
-    return state.broadcasts.filter(broadcast => {
-      return broadcast
-    })
+    let filteredBroadcasts = state.broadcasts
+    // filter broadcasts for tags
+    if (rootState.ui.archiveFilter.data.tags && rootState.ui.archiveFilter.data.tags.length) {
+      filteredBroadcasts = filteredBroadcasts.filter((broadcast) => {
+        if (broadcast.tags && broadcast.tags.some((tag) => {
+          if (rootState.ui.archiveFilter.data.tags.includes(tag)) return true
+        })) {
+          return broadcast
+        }
+      })
+    }
+    // and filter for channel (=format)
+    if (rootState.ui.archiveFilter.data.format && rootState.ui.archiveFilter.data.format !== '0') { // when setting format to all, we have a string value of 0
+      filteredBroadcasts = filteredBroadcasts.filter(broadcast => {
+        if (broadcast.format === rootState.ui.archiveFilter.data.format) return broadcast
+      })
+    }
+    return filteredBroadcasts
   }
 }
 

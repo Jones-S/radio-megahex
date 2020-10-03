@@ -9,13 +9,12 @@
       @change="submit"
     >
       <FormFieldSelect v-if="formats" :label="'Format'" :name="'format'" :option-items="formats" @input="updateFormData($event, 'format')" />
-      <FormFieldCheckbox v-if="tags" :label="'Tags'" :name="'tag'" :option-items="tags" @input="updateFormData($event, 'tag')" />
+      <FormFieldCheckbox v-if="tags" :label="'Tags'" :name="'tag'" :option-items="tags" @input="updateFormData($event, 'tags')" />
     </form>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
 import FormFieldSelect from './FormFieldSelect.vue'
 import FormFieldCheckbox from './FormFieldCheckbox.vue'
 import Heading from './Heading.vue'
@@ -27,16 +26,18 @@ export default {
     FormFieldSelect,
     Heading
   },
+  props: {
+    filterData: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => {
     return {
       formData: {},
     }
   },
-  created () {
-    this.fetchFilterData()
-  },
   methods: {
-    ...mapActions('data', ['fetchFilterData']),
     submit() {
       this.$store.dispatch('ui/setArchiveFilter', {
         data: this.formData
@@ -47,7 +48,6 @@ export default {
     },
   },
   computed: {
-    ...mapState('data', ['filterData']),
     formats() {
       if (!this.filterData.formats) return false
       const options = this.filterData.formats.map((format) => {

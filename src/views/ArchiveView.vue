@@ -2,23 +2,22 @@
   <div class="ArchiveView">
     <ContentBox
       :inverted="true"
-      :columns="susyColumns()"
+      :columns="10"
       :no-line="true"
     >
-      <ArchiveFilter />
+      <ArchiveFilter v-if="filterData" :filter-data="filterData" />
       <BroadcastList v-if="broadcasts" :broadcasts="broadcasts" />
     </ContentBox>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import config from '../config.js'
 import BaseView from './BaseView.vue'
 import BroadcastList from '../components/BroadcastList.vue'
 import ContentBox from '../components/ContentBox.vue'
 import ArchiveFilter from '../components/ArchiveFilter.vue'
-import { connectionLineHelper } from '../mixins/helpers'
 
 export default {
   name: 'ArchiveView',
@@ -28,20 +27,20 @@ export default {
     ContentBox
   },
   extends: BaseView,
-  mixins: [connectionLineHelper],
   data: () => {
     return {
       recordingsUrl: config.recordingsUrl
     }
   },
   computed: {
-    ...mapGetters('data', ['broadcasts'])
+    ...mapGetters('data', ['broadcasts']),
+    ...mapState('data', ['filterData']),
   },
   async mounted() {
-    this.fetchBroadcastData()
+    this.fetchArchive() // fetches filter and archive data
   },
   methods: {
-    ...mapActions('data', ['fetchBroadcastData']),
+    ...mapActions('data', ['fetchArchive']),
   }
 }
 </script>
