@@ -25,3 +25,17 @@ export function mapFormats(data) {
     }
   })
 }
+
+/*
+ * Kirby exports select fields only as values and not as text. So we need to save that value...
+ */
+export function mapFormat(format) {
+  if (!format) {
+    console.warn('Your filter formats are undefined: ', format)
+    return false
+  }
+  return {
+    slug: format,
+    name: formatsMap[format]
+  }
+}

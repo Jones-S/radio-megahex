@@ -12,6 +12,14 @@
         <Heading :level="1">{{ page.title }}</Heading>
       </ContentBox>
       <ContentBox
+        v-if="tags || format"
+        :inverted="true"
+        :columns="susyColumns()"
+        :no-line="false"
+      >
+        <ArchiveMeta v-if="tags || format" :tags="tags" :format="format" />
+      </ContentBox>
+      <ContentBox
         v-if="file"
         :columns="susyColumns()"
       >
@@ -38,10 +46,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { mapFormat } from '../utilities/mapData'
 import BaseView from './BaseView.vue'
 import Paragraph from '../components/Paragraph.vue'
 import TwitchEmbed from '../components/TwitchEmbed.vue'
 import Loader from '../components/Loader.vue'
+import ArchiveMeta from '../components/ArchiveMeta.vue'
 import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
@@ -55,6 +65,7 @@ export default {
   components: {
     AudioPlayer,
     Loader,
+    ArchiveMeta,
     TwitchEmbed,
     FloatingImages,
     Paragraph,
@@ -78,6 +89,14 @@ export default {
     channel() {
       if (!this.page || !this.page.content || !this.page.content.twitch_channel) return false
       return this.page.content.twitch_channel
+    },
+    tags() {
+      if (!this.page || !this.page.content || !this.page.content.tags) return false
+      return this.page.content.tags.map((tag) => tag.text)
+    },
+    format() {
+      if (!this.page || !this.page.content || !this.page.content.format) return false
+      return mapFormat(this.page.content.format).name
     },
     floatingImages() {
       if (!this.page || !this.page.content || !this.page.content.draggable_images) return false
