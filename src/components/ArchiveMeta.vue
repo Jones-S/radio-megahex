@@ -1,8 +1,8 @@
 <template>
   <div class="ArchiveMeta">
-    <span class="ArchiveMeta__meta">Format: {{ format }}</span>
+    <span v-if="format" class="ArchiveMeta__meta">Format: {{ format }}</span>
     <span id="list-label" class="ArchiveMeta__label">Tags:</span>
-    <ul aria-labelledby="list-label">
+    <ul v-if="tags" aria-labelledby="list-label">
       <li v-for="(tag, index) in tags" :key="index">{{ tag }}</li>
     </ul>
   </div>
