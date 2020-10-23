@@ -25,6 +25,9 @@
       >
        <AudioPlayer :src="file" :program="page.title" :show-playbar="true"></AudioPlayer>
       </ContentBox>
+      <ContentBox v-if="channel">
+        <TwitchEmbed :channel="channel"></TwitchEmbed>
+      </ContentBox>
       <ContentBox
         v-for="(paragraph, index) in paragraphs"
         :key="index"
@@ -38,9 +41,6 @@
       <FloatingImages v-if="floatingImages" :images="floatingImages" />
     </div>
     <Loader v-else></Loader>
-    <ContentBox v-if="channel">
-      <TwitchEmbed :channel="channel"></TwitchEmbed>
-    </ContentBox>
   </div>
 </template>
 
