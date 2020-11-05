@@ -16,7 +16,7 @@ export default {
     alt: {
       type: String,
       required: true,
-      default: ''
+      default: 'megahex.fm image'
     },
     imageBackgroundColor: {
       type: String,

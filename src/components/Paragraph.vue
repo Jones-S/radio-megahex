@@ -49,6 +49,10 @@ export default {
     a {
       text-decoration: underline;
     }
+
+    img {
+      max-width: 100%;
+    }
   }
 
   .is-inverted {

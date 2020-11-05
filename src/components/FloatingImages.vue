@@ -2,7 +2,7 @@
   <div class="FloatingImages">
     <div v-if="breakpointCurrent.innerWidth > 800">
       <FloatingElement v-for="(image) in images" :key="image.url" :src="image.url">
-        <ColoredImage :src-set="image.srcset" :alt="'megahex'" />
+        <ColoredImage :src-set="image.srcset" :alt="alt(image.alt.value)" />
       </FloatingElement>
       <!-- Proof of Concept for using any element as draggable item -->
       <!-- <FloatingElement :options="{ width: 300, height: 250 }">
@@ -34,7 +34,12 @@ export default {
   },
   computed: {
     ...mapState('ui', ['breakpointCurrent'])
-  }
+  },
+  methods: {
+    alt(value) {
+      return value || 'megahex.fm image'
+    }
+  },
 }
 </script>
 
