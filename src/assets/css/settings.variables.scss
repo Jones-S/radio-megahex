@@ -85,6 +85,8 @@ $s-size-content-max-width-large: 1440px;
  */
 
 $s-zindex-map: (
+  'chatbutton': 130,
+  'chat': 129,
   'iconbuttons': 120,
   'sidecontainer': 110,
 );

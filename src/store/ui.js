@@ -1,5 +1,6 @@
 const state = {
   navMenuOpen: false,
+  chatOpen: false,
   breakpointCurrent: false,
   archiveFilter: {
     data: {
@@ -20,6 +21,9 @@ const actions = {
   toggleMenu({ commit }) {
     commit('TOGGLE_MENU')
   },
+  toggleChat({ commit }) {
+    commit('TOGGLE_CHAT')
+  },
   setArchiveFilter({ commit }, data) {
     commit('SAVE_ARCHIVE_FILTER', data)
   },
@@ -33,6 +37,9 @@ const mutations = {
   TOGGLE_MENU(state) {
     state.navMenuOpen = !state.navMenuOpen
     // state.navMenuOpen ? noScroll.on() : noScroll.off()
+  },
+  TOGGLE_CHAT(state) {
+    state.chatOpen = !state.chatOpen
   },
   CLOSE_MENU(state) {
     state.navMenuOpen = false

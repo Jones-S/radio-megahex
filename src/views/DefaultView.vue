@@ -33,12 +33,16 @@
         :key="index"
         :inverted="!!paragraph.inverted"
         :columns="susyColumns(minCol, maxCol)"
-        :no-line="index === paragraphs.length - 1"
+        :no-line="false"
       >
         <Heading :level="2">{{ paragraph.title }}</Heading>
         <Paragraph v-if="paragraph.text" :content="paragraph.text"></Paragraph>
       </ContentBox>
+
+      <Chat />
+
       <FloatingImages v-if="floatingImages" :images="floatingImages" />
+      <ChatButton />
     </div>
     <Loader v-else></Loader>
   </div>
@@ -56,6 +60,8 @@ import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
+import Chat from '../components/Chat.vue'
+import ChatButton from '../components/ChatButton.vue'
 import { connectionLineHelper } from '../mixins/helpers'
 import { format } from 'date-fns'
 import config from '../config'
@@ -63,12 +69,14 @@ import config from '../config'
 export default {
   name: 'DefaultView',
   components: {
+    Chat,
     AudioPlayer,
     Loader,
     ArchiveMeta,
     TwitchEmbed,
     FloatingImages,
     Paragraph,
+    ChatButton,
     ContentBox,
     Heading
   },
