@@ -1,6 +1,6 @@
 <template>
   <button :class="['ChatButton', { 'is-open': chatOpen }]" @click="toggleChat">
-    Chat
+    chat
   </button>
 </template>
 
