@@ -28,6 +28,15 @@
       <ContentBox v-if="channel">
         <TwitchEmbed :channel="channel"></TwitchEmbed>
       </ContentBox>
+      <Teaser
+        v-for="(teaser, index) in teasers"
+        :key="`${index}-${teaser.title.slice(0, 6)}`"
+        :image="teaser.image"
+        :rich-text="teaser.richText"
+        :date="teaser.date"
+        :title="teaser.title"
+        :link="teaser.link"
+      ></Teaser>
       <ContentBox
         v-for="(paragraph, index) in paragraphs"
         :key="index"
@@ -62,6 +71,7 @@ import FloatingImages from '../components/FloatingImages.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
 import Chat from '../components/Chat.vue'
 import ChatButton from '../components/ChatButton.vue'
+import Teaser from '../components/Teaser.vue'
 import { connectionLineHelper } from '../mixins/helpers'
 import { format } from 'date-fns'
 import config from '../config'
@@ -78,7 +88,8 @@ export default {
     Paragraph,
     ChatButton,
     ContentBox,
-    Heading
+    Heading,
+    Teaser
   },
   extends: BaseView,
   mixins: [connectionLineHelper],
@@ -90,40 +101,42 @@ export default {
   },
   computed: {
     ...mapGetters('data', ['page']),
+    curatedPosts() {
+      if (!this.page?.content?.related) return false
+      return this.page.content.related
+    },
     paragraphs() {
-      if (!this.page || !this.page.content || !this.page.content.paragraphs) return false
+      if (!this.page?.content?.paragraphs) return false
       return this.page.content.paragraphs
     },
     channel() {
-      if (!this.page || !this.page.content || !this.page.content.twitch_channel) return false
+      if (!this.page?.content?.twitch_channel) return false
       return this.page.content.twitch_channel
     },
     tags() {
-      if (!this.page || !this.page.content || !this.page.content.tags) return false
+      if (!this.page?.content?.tags) return false
       return this.page.content.tags.map((tag) => tag.text)
     },
     format() {
-      if (!this.page || !this.page.content || !this.page.content.format) return false
+      if (!this.page?.content?.format) return false
       return mapFormat(this.page.content.format).name
     },
     floatingImages() {
-      if (!this.page || !this.page.content || !this.page.content.draggable_images) return false
+      if (!this.page?.content?.draggable_images) return false
       return this.page.content.draggable_images
     },
     date() {
-      if (!this.page || !this.page.content || !this.page.content.date) return false
-      // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
-      const date = this.page.content.date.replace('&#160;', 'T')
-      return format(new Date(date), 'yyyy-MM-dd')
+      if (!this.page?.content?.date) return false
+      return this.prepareDate(this.prepareDateString(this.page.content.date))
     },
     time() {
-      if (!this.page || !this.page.content || !this.page.content.date || !this.page.content.end_time) return false
-      const date = this.page.content.date.replace('&#160;', 'T')
-      const starttime = format(new Date(date), 'HH:mm')
+      if (!this.page?.content?.date || !this.page.content.end_time) return false
+      const date = this.prepareDateString(this.page.content.date)
+      const starttime = this.prepareTimeFromDate(date)
       return `${starttime}—${this.page.content.end_time}`
     },
     file() {
-      if (!this.page || !this.page.content || !this.page.content.filename) return false
+      if (!this.page?.content?.filename) return false
       let filename = this.page.content.filename
       // if the filename contains a full path we want to just return that
       if (filename.startsWith('https')) {
@@ -133,6 +146,39 @@ export default {
       filename = filename.endsWith('.mp3') ? filename : `${filename}.mp3`
       // but normally we just have the filename and want to return a full path
       return `${config.recordingsUrl}${filename}`
+    },
+    teasers() {
+      if (!this.page?.content?.related) return false
+      const teasers = this.page.content.related.map(teaser => {
+        return {
+          image: {
+            url: teaser?.image?.thumb,
+            alt: teaser?.image?.alt
+          },
+          richText: teaser?.teaserText || '',
+          title: teaser?.title || '',
+          link: {
+            url: teaser.uri,
+            text: '> Weiterlesen...',
+          },
+          date: this.prepareDate(teaser.date)
+        }
+      })
+      console.log('teasers: ', teasers)
+      return teasers
+    }
+  },
+  methods: {
+    prepareDateString(string) {
+      // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
+      return string.replace('&#160;', 'T')
+
+    },
+    prepareDate(dateString) {
+      return format(new Date(dateString), 'yyyy-MM-dd')
+    },
+    prepareTimeFromDate(date) {
+      return format(new Date(date), 'HH:mm')
     }
   },
   mounted() {
@@ -147,6 +193,8 @@ export default {
   $c: 'DefaultView';
 
   .#{$c} {
+    @include grid-debug;
+
     &__date {
       &::after {
         display: inline-block;

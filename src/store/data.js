@@ -165,7 +165,16 @@ const actions = {
     return mergedArray.filter(item => item.title)
   },
   async fetchPage({}, { slug }) { // eslint-disable-line
-    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/rest/pages/${slug}/` : `${config.apiBaseUrlRemote}/rest/pages/${slug}/`
+    let url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}` : `${config.apiBaseUrlRemote}`
+    // if we fetch the home slug, we don't just want to fetch the default page which is returned by the robinscholz better rest plugin
+    // instead we want to add some info about related (linked) podcasts
+    // that's why we need to fetch from a special endpoint for home.
+    if (slug === 'home') {
+      console.log('... fetching special home!');
+      url = `${url}/megahex-home`
+    } else {
+      url = `${url}/rest/pages/${slug}/`
+    }
 
     return axios.get(url)
       .then((response) => {
@@ -195,6 +204,7 @@ const mutations = {
     state.currentPage = page
   },
   SAVE_PAGE_IN_STORE(state, page) {
+    console.log('page: ', page)
     state.pages.push(page)
   },
   SAVE_SITE(state, site) {

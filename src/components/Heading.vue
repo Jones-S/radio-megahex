@@ -67,6 +67,10 @@ export default {
       @include font-style-heading-1;
     }
 
+    &--large {
+      @include font-style-heading-large;
+    }
+
     &--colored {
       color: $s-color-primary;
     }

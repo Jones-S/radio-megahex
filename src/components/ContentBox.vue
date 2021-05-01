@@ -64,63 +64,63 @@ export default {
     &__box {
       background-color: $s-color-white;
       border: 1px solid $s-color-black;
-      padding: $s-box-distance * 5 $s-box-distance * 2 $s-box-distance * 2;
-      width: span(12 of 12);
+      padding: $s-box-distance * 5 $s-box-padding $s-box-padding;
+      width: span($s-amount-columns of $s-amount-columns);
       position: relative;
 
       @include mq($from: medium) {
-        width: span(10 of 12);
-        margin-left: span(1 of 12)
+        width: span(10 of $s-amount-columns);
+        margin-left: span(1 wide of $s-amount-columns)
 
         &--susy-cols-7 {
-          width: span(7 of 12);
-          margin-left: span(2 of 12)
+          width: span(7 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-8 {
-          width: span(8 of 12);
-          margin-left: span(2 of 12)
+          width: span(8 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-9 {
-          width: span(9 of 12);
-          margin-left: span(2 of 12)
+          width: span(9 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-10 {
-          width: span(10 of 12);
-          margin-left: span(1 of 12)
+          width: span(10 of $s-amount-columns);
+          margin-left: span(1 wide of $s-amount-columns)
         }
         &--susy-cols-11 {
-          width: span(11 of 12);
+          width: span(11 of $s-amount-columns);
           margin-left: 0;
         }
         &--susy-cols-12 {
-          width: span(12 of 12);
+          width: span($s-amount-columns of $s-amount-columns);
           margin-left: 0;
         }
       }
 
       @include mq($from: large) {
         &--susy-cols-7 {
-          width: span(5 of 12);
-          margin-left: span(2 of 12)
+          width: span(5 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-8 {
-          width: span(6 of 12);
-          margin-left: span(2 of 12)
+          width: span(6 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-9 {
-          width: span(7 of 12);
-          margin-left: span(2 of 12)
+          width: span(7 of $s-amount-columns);
+          margin-left: span(2 wide of $s-amount-columns)
         }
         &--susy-cols-10 {
-          width: span(8 of 12);
-          margin-left: span(1 of 12)
+          width: span(8 of $s-amount-columns);
+          margin-left: span(1 wide of $s-amount-columns)
         }
         &--susy-cols-11 {
-          width: span(9 of 12);
+          width: span(9 of $s-amount-columns);
           margin-left: 0;
         }
         &--susy-cols-12 {
-          width: span(10 of 12);
+          width: span(10 of $s-amount-columns);
           margin-left: 0;
         }
       }

@@ -285,3 +285,7 @@
   #{$prop}: $px;
   #{$prop}: px-to-rem($px); // sass-lint:disable-line no-duplicate-properties
 }
+
+@mixin grid-debug() {
+  background: susy-svg-grid() no-repeat scroll;
+}

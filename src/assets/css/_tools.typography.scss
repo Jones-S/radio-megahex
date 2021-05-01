@@ -65,6 +65,12 @@
   font-weight: bold;
 }
 
+@mixin font-style-heading-large {
+  font-family: $s-font-family-base;
+  font-size: $s-fz-30;
+  font-weight: bold;
+}
+
 @mixin font-style-cygnito-small {
   @include font-style-extra;
   font-size: $s-fz-14;
