@@ -3,7 +3,7 @@
     <div class="Teaser__text-container">
       <span class="Teaser__date">{{date}}</span>
       <Heading :level="2" class="Teaser__title Heading--large">{{title}}</Heading>
-      <KirbyBlocks v-if="richText" :content="richText" :path="link.url"></KirbyBlocks>
+      <KirbyBlocks v-if="richText" :content="richText"></KirbyBlocks>
       <span class="Teaser__read-more">
         <router-link
           class="Teaser__link"

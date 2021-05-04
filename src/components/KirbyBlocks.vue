@@ -1,6 +1,8 @@
 <template>
   <div class="KirbyBlocks">
+    kirbyblocks
     <template v-for="block in blocks">
+      <Heading :level="2" v-if="!block.isHidden && block.type==='heading'" :key="block.id">{{block.content.text}}</Heading>
       <Paragraph v-if="!block.isHidden && block.type==='text'" :key="block.id" :content="block.content.text" />
       <img class="KirbyBlocks__image" v-if="!block.isHidden && block.type==='image'" :key="block.id" :src="block.content.medium" :alt="block.content.alt" />
     </template>
@@ -12,30 +14,29 @@
  * Kirby Richtext in the blocks format:
  * https://getkirby.com/docs/reference/panel/fields/blocks
  * Comes as an JSON stringified Array of blocks.
- *
- * The path property is needed to resolve image paths properly, as the image block does not contain that info.
  */
 import { kirbyTagsHelper } from '../mixins/helpers'
 import Paragraph from '../components/Paragraph.vue'
+import Heading from '../components/Heading.vue'
 
 export default {
   name: 'KirbyBlocks',
   mixins: [kirbyTagsHelper],
   components: {
+    Heading,
     Paragraph,
   },
   props: {
     content: {
-      type: String,
+      type: [String, Array],
       required: true
     },
-    path: {
-      type: String,
-      required: true
-    }
   },
   computed: {
     blocks() {
+      if (this.content.constructor === Array) {
+        return this.content
+      }
       return JSON.parse(this.content)
     }
   },

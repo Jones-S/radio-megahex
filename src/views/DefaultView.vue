@@ -25,6 +25,11 @@
       >
        <AudioPlayer :src="file" :program="page.title" :show-playbar="true"></AudioPlayer>
       </ContentBox>
+
+      <ContentBox v-if="blogTextKirbyBlocks" :columns="10">
+          <KirbyBlocks v-if="blogTextKirbyBlocks" :content="blogTextKirbyBlocks"></KirbyBlocks>
+      </ContentBox>
+
       <ContentBox v-if="channel">
         <TwitchEmbed :channel="channel"></TwitchEmbed>
       </ContentBox>
@@ -80,6 +85,7 @@ import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
+import KirbyBlocks from '../components/KirbyBlocks.vue'
 import PodcastTeaser from '../components/PodcastTeaser.vue'
 import Chat from '../components/Chat.vue'
 import ChatButton from '../components/ChatButton.vue'
@@ -93,6 +99,7 @@ export default {
   components: {
     Chat,
     PodcastTeaser,
+    KirbyBlocks,
     AudioPlayer,
     Loader,
     ArchiveMeta,
@@ -134,6 +141,10 @@ export default {
     format() {
       if (!this.page?.content?.format) return false
       return mapFormat(this.page.content.format).name
+    },
+    blogTextKirbyBlocks() {
+      if (!this.page?.content?.blogtext) return false
+      return this.page.content.blogtext
     },
     floatingImages() {
       if (!this.page?.content?.draggable_images) return false

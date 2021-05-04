@@ -7,7 +7,7 @@
       <AudioPlayer :src="file" :program="title" :show-playbar="true" inverted></AudioPlayer>
       <div class="PodcastTeaser__blocks-container">
         <span class="PodcastTeaser__date">{{date}}</span>
-        <KirbyBlocks class="PodcastTeaser__KirbyBlocks PodcastTeaser__teaser-text" v-if="richText" :content="richText" :path="link.url"></KirbyBlocks>
+        <KirbyBlocks class="PodcastTeaser__KirbyBlocks PodcastTeaser__teaser-text" v-if="richText" :content="richText"></KirbyBlocks>
         <span class="PodcastTeaser__read-more">
           <router-link
             class="PodcastTeaser__link"
