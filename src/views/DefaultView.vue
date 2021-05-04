@@ -28,15 +28,26 @@
       <ContentBox v-if="channel">
         <TwitchEmbed :channel="channel"></TwitchEmbed>
       </ContentBox>
-      <Teaser
-        v-for="(teaser, index) in teasers"
-        :key="`${index}-${teaser.title.slice(0, 6)}`"
-        :image="teaser.image"
-        :rich-text="teaser.richText"
-        :date="teaser.date"
-        :title="teaser.title"
-        :link="teaser.link"
-      ></Teaser>
+      <template v-for="(teaser, index) in teasers">
+        <Teaser
+          v-if="teaser.pageType === 'blog'"
+          :key="`${index}-${teaser.title.slice(0, 6)}`"
+          :rich-text="teaser.richText"
+          :date="teaser.date"
+          :title="teaser.title"
+          :link="teaser.link"
+        ></Teaser>
+        <PodcastTeaser
+          v-if="teaser.pageType === 'archive'"
+          :key="`${index}-${teaser.title.slice(0, 6)}`"
+          :image="teaser.image"
+          :rich-text="teaser.richText"
+          :date="teaser.date"
+          :title="teaser.title"
+          :link="teaser.link"
+          :file="teaser.file"
+        ></PodcastTeaser>
+      </template>
       <ContentBox
         v-for="(paragraph, index) in paragraphs"
         :key="index"
@@ -69,6 +80,7 @@ import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
+import PodcastTeaser from '../components/PodcastTeaser.vue'
 import Chat from '../components/Chat.vue'
 import ChatButton from '../components/ChatButton.vue'
 import Teaser from '../components/Teaser.vue'
@@ -80,6 +92,7 @@ export default {
   name: 'DefaultView',
   components: {
     Chat,
+    PodcastTeaser,
     AudioPlayer,
     Loader,
     ArchiveMeta,
@@ -107,6 +120,7 @@ export default {
     },
     paragraphs() {
       if (!this.page?.content?.paragraphs) return false
+      console.log('JSON.parse(this.page.content.paragraphs): ', this.page.content.paragraphs)
       return this.page.content.paragraphs
     },
     channel() {
@@ -137,23 +151,16 @@ export default {
     },
     file() {
       if (!this.page?.content?.filename) return false
-      let filename = this.page.content.filename
-      // if the filename contains a full path we want to just return that
-      if (filename.startsWith('https')) {
-        return filename
-      }
-      // also check if the filename has a file suffix
-      filename = filename.endsWith('.mp3') ? filename : `${filename}.mp3`
-      // but normally we just have the filename and want to return a full path
-      return `${config.recordingsUrl}${filename}`
+      let fileString = this.page.content.filename
+      return this.prepareFilePath(fileString)
     },
     teasers() {
       if (!this.page?.content?.related) return false
       const teasers = this.page.content.related.map(teaser => {
         return {
           image: {
-            url: teaser?.image?.thumb,
-            alt: teaser?.image?.alt
+            url: teaser?.teaserImage?.image?.thumb,
+            alt: teaser?.teaserImage?.image?.alt
           },
           richText: teaser?.teaserText || '',
           title: teaser?.title || '',
@@ -161,7 +168,9 @@ export default {
             url: teaser.uri,
             text: '> Weiterlesen...',
           },
-          date: this.prepareDate(teaser.date)
+          pageType: teaser?.pageType,
+          date: this.prepareDate(teaser.date),
+          file: this.prepareFilePath(teaser.filename)
         }
       })
       console.log('teasers: ', teasers)
@@ -179,6 +188,16 @@ export default {
     },
     prepareTimeFromDate(date) {
       return format(new Date(date), 'HH:mm')
+    },
+    prepareFilePath(fileString) {
+      // if the filename contains a full path we want to just return that
+      if (fileString.startsWith('https')) {
+        return fileString
+      }
+      // also check if the filename has a file suffix
+      fileString = fileString.endsWith('.mp3') ? fileString : `${fileString}.mp3`
+      // but normally we just have the filename and want to return a full path
+      return `${config.recordingsUrl}${fileString}`
     }
   },
   mounted() {
@@ -193,7 +212,7 @@ export default {
   $c: 'DefaultView';
 
   .#{$c} {
-    @include grid-debug;
+    // @include grid-debug;
 
     &__date {
       &::after {

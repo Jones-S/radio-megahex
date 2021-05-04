@@ -1,8 +1,5 @@
 <template>
-  <div class="Teaser" :class="{ 'Teaser--podcast' : file }">
-    <!-- <div class="Teaser__img-container">
-      <img class="Teaser__img" :src="image.url" :alt="image.alt" />
-    </div> -->
+  <div class="Teaser">
     <div class="Teaser__text-container">
       <span class="Teaser__date">{{date}}</span>
       <Heading :level="2" class="Teaser__title Heading--large">{{title}}</Heading>
@@ -32,10 +29,6 @@ export default {
     Heading
   },
   props: {
-    image: {
-      type: Object,
-      required: true
-    },
     richText: {
       type: String,
       required: true
@@ -52,11 +45,6 @@ export default {
       type: Object,
       required: true
     },
-    file: {
-      type: [String, Boolean],
-      required: false,
-      default: false
-    }
   },
   methods: {
     removeHomeSlug(slug) {

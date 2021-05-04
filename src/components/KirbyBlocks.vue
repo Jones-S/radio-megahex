@@ -2,7 +2,7 @@
   <div class="KirbyBlocks">
     <template v-for="block in blocks">
       <Paragraph v-if="!block.isHidden && block.type==='text'" :key="block.id" :content="block.content.text" />
-      <img v-if="!block.isHidden && block.type==='image'" :key="block.id" :src="imgPath(block.content.image)" :alt="block.content.alt" />
+      <img class="KirbyBlocks__image" v-if="!block.isHidden && block.type==='image'" :key="block.id" :src="block.content.medium" :alt="block.content.alt" />
     </template>
   </div>
 </template>
@@ -16,7 +16,6 @@
  * The path property is needed to resolve image paths properly, as the image block does not contain that info.
  */
 import { kirbyTagsHelper } from '../mixins/helpers'
-import config from '../config'
 import Paragraph from '../components/Paragraph.vue'
 
 export default {
@@ -40,12 +39,6 @@ export default {
       return JSON.parse(this.content)
     }
   },
-  methods: {
-    imgPath(file) {
-      const url = process.env.NODE_ENV === 'development' ? `${config.imageBaseUrlLocal}/pages` : `${config.imageBaseUrlRemote}/pages`
-      return `${url}/${this.path}/${file}`
-    }
-  }
 }
 </script>
 
@@ -55,6 +48,9 @@ export default {
   $c: 'KirbyBlocks';
 
   .#{$c} {
-
+    &__image {
+      max-width: 100%;
+      max-height: 30rem;
+    }
   }
 </style>
