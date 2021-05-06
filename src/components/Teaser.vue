@@ -2,7 +2,12 @@
   <div class="Teaser">
     <div class="Teaser__text-container">
       <span class="Teaser__date">{{date}}</span>
-      <Heading :level="2" class="Teaser__title Heading--large">{{title}}</Heading>
+      <router-link
+          class="Teaser__title-link"
+          :to="`/${removeHomeSlug(link.url)}`"
+        >
+          <Heading :level="2" class="Teaser__title Heading--large">{{title}}</Heading>
+        </router-link>
       <KirbyBlocks v-if="richText" :content="richText"></KirbyBlocks>
       <span class="Teaser__read-more">
         <router-link
@@ -31,7 +36,8 @@ export default {
   props: {
     richText: {
       type: String,
-      required: true
+      required: false,
+      default: 'Kein Teasertext vorhanden...'
     },
     date: {
       type: String,
@@ -78,6 +84,24 @@ export default {
 
       @include mq($from: medium) {
         font-size: $s-fz-14;
+      }
+    }
+
+    &__link {
+      color: $s-color-primary;
+
+      &:hover {
+        color: $s-color-black;
+      }
+    }
+
+    &__title-link {
+      text-decoration: none;
+
+      &:hover {
+        /deep/ .Heading {
+          color: $s-color-primary;
+        }
       }
     }
 

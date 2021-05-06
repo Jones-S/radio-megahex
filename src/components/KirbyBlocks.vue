@@ -1,6 +1,5 @@
 <template>
   <div class="KirbyBlocks">
-    kirbyblocks
     <template v-for="block in blocks">
       <Heading :level="2" v-if="!block.isHidden && block.type==='heading'" :key="block.id">{{block.content.text}}</Heading>
       <Paragraph v-if="!block.isHidden && block.type==='text'" :key="block.id" :content="block.content.text" />

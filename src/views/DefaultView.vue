@@ -90,7 +90,7 @@ import PodcastTeaser from '../components/PodcastTeaser.vue'
 import Chat from '../components/Chat.vue'
 import ChatButton from '../components/ChatButton.vue'
 import Teaser from '../components/Teaser.vue'
-import { connectionLineHelper } from '../mixins/helpers'
+import { connectionLineHelper, dateHelper } from '../mixins/helpers'
 import { format } from 'date-fns'
 import config from '../config'
 
@@ -112,7 +112,7 @@ export default {
     Teaser
   },
   extends: BaseView,
-  mixins: [connectionLineHelper],
+  mixins: [connectionLineHelper, dateHelper],
   data: () => {
     return {
       minCol: 7,
@@ -184,7 +184,6 @@ export default {
           file: this.prepareFilePath(teaser.filename)
         }
       })
-      console.log('teasers: ', teasers)
       return teasers
     }
   },
@@ -193,9 +192,6 @@ export default {
       // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
       return string.replace('&#160;', 'T')
 
-    },
-    prepareDate(dateString) {
-      return format(new Date(dateString), 'yyyy-MM-dd')
     },
     prepareTimeFromDate(date) {
       return format(new Date(date), 'HH:mm')

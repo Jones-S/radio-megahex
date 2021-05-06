@@ -1,46 +1,54 @@
 <template>
   <div class="BlogView">
-    <ContentBox
-      :inverted="true"
-      :columns="10"
-      :no-line="true"
-    >
-      <ArchiveFilter v-if="filterData" :filter-data="filterData" />
-      <BroadcastList v-if="broadcasts" :broadcasts="broadcasts" />
-    </ContentBox>
+    <div v-if="page">
+      <Teaser
+          v-for="(post, index) in posts"
+          :key="`${index}-${post.id}`"
+          :rich-text="post.richText"
+          :date="post.date"
+          :title="post.title"
+          :link="post.link"
+        ></Teaser>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
-import config from '../config.js'
+import { mapActions, mapState } from 'vuex'
 import BaseView from './BaseView.vue'
-import BroadcastList from '../components/BroadcastList.vue'
-import ContentBox from '../components/ContentBox.vue'
-import ArchiveFilter from '../components/ArchiveFilter.vue'
+import Teaser from '../components/Teaser.vue'
+import { dateHelper } from '../mixins/helpers'
 
 export default {
   name: 'BlogView',
   components: {
-    BroadcastList,
-    ArchiveFilter,
-    ContentBox
+    Teaser
   },
   extends: BaseView,
-  data: () => {
-    return {
-      recordingsUrl: config.recordingsUrl
-    }
+  mixins: [dateHelper],
+  async mounted() {
+    this.fetchAllBlogPosts() // fetches filter and archive data
   },
   computed: {
-    ...mapGetters('data', ['broadcasts']),
-    ...mapState('data', ['filterData']),
-  },
-  async mounted() {
-    this.fetchArchive() // fetches filter and archive data
+    ...mapState('data', ['blogPosts']),
+    posts() {
+      if (!this.blogPosts) return false
+      const posts = this.blogPosts.map(post => {
+        return {
+          richText: post?.teaserText || '',
+          title: post?.title || '',
+          link: {
+            url: post.uri,
+            text: '> Weiterlesen...',
+          },
+          date: this.prepareDate(post.date),
+        }
+      })
+      return posts
+    }
   },
   methods: {
-    ...mapActions('data', ['fetchArchive']),
+    ...mapActions('data', ['fetchAllBlogPosts']),
   }
 }
 </script>

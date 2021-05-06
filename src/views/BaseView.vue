@@ -12,7 +12,6 @@ export default {
   computed: {
     ...mapGetters('data', ['page']),
     title() {
-      console.log('this.page: ', this.page)
       return this.page ? this.page.title : 'Radio Megahex'
     },
     metaDesc() {
@@ -33,7 +32,6 @@ export default {
   },
   metaInfo() {
     const ogImageUrl = require('@/assets/og_image.jpg');
-    console.log('this.title: ', this.title)
     return {
       title: this.title,
       htmlAttrs: {
