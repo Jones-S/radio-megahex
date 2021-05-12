@@ -86,8 +86,9 @@ const actions = {
       const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/blog` : `${config.apiBaseUrlRemote}/blog`
       return axios.get(url)
       .then((response) => {
+        console.log('response: ', response)
         if (response.status === 200 && response.data) {
-            commit('SAVE_BLOGPOSTS', response.data.blogPosts)
+            commit('SAVE_BLOGPOSTS', response.data.blog_entries)
           } else {
             console.warn('response: ', response) // eslint-disable-line
           }

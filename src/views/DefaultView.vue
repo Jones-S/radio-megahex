@@ -127,7 +127,6 @@ export default {
     },
     paragraphs() {
       if (!this.page?.content?.paragraphs) return false
-      console.log('JSON.parse(this.page.content.paragraphs): ', this.page.content.paragraphs)
       return this.page.content.paragraphs
     },
     channel() {
