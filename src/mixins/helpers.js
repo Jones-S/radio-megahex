@@ -1,4 +1,5 @@
 import { getRandomInt } from '../utilities/helpers'
+import { format } from 'date-fns'
 
 export const kirbyTagsHelper = {
 	methods: {
@@ -85,5 +86,13 @@ export const draggableImageHelper = {
       return { x: initialXPosition, y: initialYPosition }
     },
 
+  }
+}
+
+export const dateHelper = {
+  methods: {
+    prepareDate(dateString) {
+      return format(new Date(dateString), 'yyyy-MM-dd')
+    },
   }
 }

@@ -25,9 +25,34 @@
       >
        <AudioPlayer :src="file" :program="page.title" :show-playbar="true"></AudioPlayer>
       </ContentBox>
+
+      <ContentBox v-if="blogTextKirbyBlocks" :columns="10">
+          <KirbyBlocks v-if="blogTextKirbyBlocks" :content="blogTextKirbyBlocks"></KirbyBlocks>
+      </ContentBox>
+
       <ContentBox v-if="channel">
         <TwitchEmbed :channel="channel"></TwitchEmbed>
       </ContentBox>
+      <template v-for="(teaser, index) in teasers">
+        <Teaser
+          v-if="teaser.pageType === 'blog'"
+          :key="`${index}-${teaser.title.slice(0, 6)}`"
+          :rich-text="teaser.richText"
+          :date="teaser.date"
+          :title="teaser.title"
+          :link="teaser.link"
+        ></Teaser>
+        <PodcastTeaser
+          v-if="teaser.pageType === 'archive'"
+          :key="`${index}-${teaser.title.slice(0, 6)}`"
+          :image="teaser.image"
+          :rich-text="teaser.richText"
+          :date="teaser.date"
+          :title="teaser.title"
+          :link="teaser.link"
+          :file="teaser.file"
+        ></PodcastTeaser>
+      </template>
       <ContentBox
         v-for="(paragraph, index) in paragraphs"
         :key="index"
@@ -60,9 +85,12 @@ import Heading from '../components/Heading.vue'
 import ContentBox from '../components/ContentBox.vue'
 import FloatingImages from '../components/FloatingImages.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
+import KirbyBlocks from '../components/KirbyBlocks.vue'
+import PodcastTeaser from '../components/PodcastTeaser.vue'
 import Chat from '../components/Chat.vue'
 import ChatButton from '../components/ChatButton.vue'
-import { connectionLineHelper } from '../mixins/helpers'
+import Teaser from '../components/Teaser.vue'
+import { connectionLineHelper, dateHelper } from '../mixins/helpers'
 import { format } from 'date-fns'
 import config from '../config'
 
@@ -70,6 +98,8 @@ export default {
   name: 'DefaultView',
   components: {
     Chat,
+    PodcastTeaser,
+    KirbyBlocks,
     AudioPlayer,
     Loader,
     ArchiveMeta,
@@ -78,10 +108,11 @@ export default {
     Paragraph,
     ChatButton,
     ContentBox,
-    Heading
+    Heading,
+    Teaser
   },
   extends: BaseView,
-  mixins: [connectionLineHelper],
+  mixins: [connectionLineHelper, dateHelper],
   data: () => {
     return {
       minCol: 7,
@@ -90,49 +121,90 @@ export default {
   },
   computed: {
     ...mapGetters('data', ['page']),
+    curatedPosts() {
+      if (!this.page?.content?.related) return false
+      return this.page.content.related
+    },
     paragraphs() {
-      if (!this.page || !this.page.content || !this.page.content.paragraphs) return false
+      if (!this.page?.content?.paragraphs) return false
+      console.log('JSON.parse(this.page.content.paragraphs): ', this.page.content.paragraphs)
       return this.page.content.paragraphs
     },
     channel() {
-      if (!this.page || !this.page.content || !this.page.content.twitch_channel) return false
+      if (!this.page?.content?.twitch_channel) return false
       return this.page.content.twitch_channel
     },
     tags() {
-      if (!this.page || !this.page.content || !this.page.content.tags) return false
+      if (!this.page?.content?.tags) return false
       return this.page.content.tags.map((tag) => tag.text)
     },
     format() {
-      if (!this.page || !this.page.content || !this.page.content.format) return false
+      if (!this.page?.content?.format) return false
       return mapFormat(this.page.content.format).name
     },
+    blogTextKirbyBlocks() {
+      if (!this.page?.content?.blogtext) return false
+      return this.page.content.blogtext
+    },
     floatingImages() {
-      if (!this.page || !this.page.content || !this.page.content.draggable_images) return false
+      if (!this.page?.content?.draggable_images) return false
       return this.page.content.draggable_images
     },
     date() {
-      if (!this.page || !this.page.content || !this.page.content.date) return false
-      // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
-      const date = this.page.content.date.replace('&#160;', 'T')
-      return format(new Date(date), 'yyyy-MM-dd')
+      if (!this.page?.content?.date) return false
+      return this.prepareDate(this.prepareDateString(this.page.content.date))
     },
     time() {
-      if (!this.page || !this.page.content || !this.page.content.date || !this.page.content.end_time) return false
-      const date = this.page.content.date.replace('&#160;', 'T')
-      const starttime = format(new Date(date), 'HH:mm')
+      if (!this.page?.content?.date || !this.page.content.end_time) return false
+      const date = this.prepareDateString(this.page.content.date)
+      const starttime = this.prepareTimeFromDate(date)
       return `${starttime}—${this.page.content.end_time}`
     },
     file() {
-      if (!this.page || !this.page.content || !this.page.content.filename) return false
-      let filename = this.page.content.filename
+      if (!this.page?.content?.filename) return false
+      let fileString = this.page.content.filename
+      return this.prepareFilePath(fileString)
+    },
+    teasers() {
+      if (!this.page?.content?.related) return false
+      const teasers = this.page.content.related.map(teaser => {
+        return {
+          image: {
+            url: teaser?.teaserImage?.image?.thumb,
+            alt: teaser?.teaserImage?.image?.alt
+          },
+          richText: teaser?.teaserText || '',
+          title: teaser?.title || '',
+          link: {
+            url: teaser.uri,
+            text: '> Weiterlesen...',
+          },
+          pageType: teaser?.pageType,
+          date: this.prepareDate(teaser.date),
+          file: this.prepareFilePath(teaser.filename)
+        }
+      })
+      return teasers
+    }
+  },
+  methods: {
+    prepareDateString(string) {
+      // Because the better-rest plugin by robinscholz adds a non breaking space &#160; to the date format in the REST API we need to replace this
+      return string.replace('&#160;', 'T')
+
+    },
+    prepareTimeFromDate(date) {
+      return format(new Date(date), 'HH:mm')
+    },
+    prepareFilePath(fileString) {
       // if the filename contains a full path we want to just return that
-      if (filename.startsWith('https')) {
-        return filename
+      if (fileString.startsWith('https')) {
+        return fileString
       }
       // also check if the filename has a file suffix
-      filename = filename.endsWith('.mp3') ? filename : `${filename}.mp3`
+      fileString = fileString.endsWith('.mp3') ? fileString : `${fileString}.mp3`
       // but normally we just have the filename and want to return a full path
-      return `${config.recordingsUrl}${filename}`
+      return `${config.recordingsUrl}${fileString}`
     }
   },
   mounted() {
@@ -147,6 +219,8 @@ export default {
   $c: 'DefaultView';
 
   .#{$c} {
+    // @include grid-debug;
+
     &__date {
       &::after {
         display: inline-block;

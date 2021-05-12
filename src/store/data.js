@@ -11,6 +11,7 @@ const state = {
   site: false,
   currentPage: false,
   broadcasts: false,
+  blogPosts: false,
   loading: true,
   filterData: false
 }
@@ -80,13 +81,28 @@ const actions = {
         })
     }
   },
+  async fetchAllBlogPosts({ commit }) {
+    if (!state.blogPosts) {
+      const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/blog` : `${config.apiBaseUrlRemote}/blog`
+      return axios.get(url)
+      .then((response) => {
+        if (response.status === 200 && response.data) {
+            commit('SAVE_BLOGPOSTS', response.data.blogPosts)
+          } else {
+            console.warn('response: ', response) // eslint-disable-line
+          }
+        }, (err) => {
+          console.error(err) // eslint-disable-line
+        })
+    }
+  },
   async fetchArchive({ dispatch }) {
     dispatch('fetchBroadcastData')
     // because MAMP is unable to cope too many simultaneous requests we add a one tick timeout to postpone things a bit
     // no idea if this is a problem on the remote server...
     const timeoutDuration = process.env.NODE_ENV === 'development' ? 100 : 1
     setTimeout(async() => {
-      console.log('fetching filter data a bit later...')
+      // console.log('fetching filter data a bit later...')
       dispatch('fetchFilterData')
     }, timeoutDuration)
   },
@@ -165,7 +181,15 @@ const actions = {
     return mergedArray.filter(item => item.title)
   },
   async fetchPage({}, { slug }) { // eslint-disable-line
-    const url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}/rest/pages/${slug}/` : `${config.apiBaseUrlRemote}/rest/pages/${slug}/`
+    let url = process.env.NODE_ENV === 'development' ? `${config.apiBaseUrlLocal}` : `${config.apiBaseUrlRemote}`
+    // if we fetch the home slug, we don't just want to fetch the default page which is returned by the robinscholz better rest plugin
+    // instead we want to add some info about related (linked) podcasts
+    // that's why we need to fetch from a special endpoint for home.
+    if (slug === 'home') {
+      url = `${url}/megahex-home`
+    } else {
+      url = `${url}/rest/pages/${slug}/`
+    }
 
     return axios.get(url)
       .then((response) => {
@@ -205,6 +229,9 @@ const mutations = {
   },
   SAVE_BROADCASTS(state, data) {
     state.broadcasts = data
+  },
+  SAVE_BLOGPOSTS(state, data) {
+    state.blogPosts = data
   }
 }
 

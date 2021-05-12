@@ -1,6 +1,7 @@
 <template>
   <div class="ArchiveView">
     <ContentBox
+      v-if="filterData && broadcasts"
       :inverted="true"
       :columns="10"
       :no-line="true"
@@ -8,6 +9,7 @@
       <ArchiveFilter v-if="filterData" :filter-data="filterData" />
       <BroadcastList v-if="broadcasts" :broadcasts="broadcasts" />
     </ContentBox>
+    <Loader v-else></Loader>
   </div>
 </template>
 
@@ -18,12 +20,14 @@ import BaseView from './BaseView.vue'
 import BroadcastList from '../components/BroadcastList.vue'
 import ContentBox from '../components/ContentBox.vue'
 import ArchiveFilter from '../components/ArchiveFilter.vue'
+import Loader from '../components/Loader.vue'
 
 export default {
   name: 'ArchiveView',
   components: {
     BroadcastList,
     ArchiveFilter,
+    Loader,
     ContentBox
   },
   extends: BaseView,

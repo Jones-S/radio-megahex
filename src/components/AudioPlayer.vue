@@ -1,5 +1,5 @@
 <template>
-  <div class="AudioPlayer">
+  <div class="AudioPlayer" :class="{ 'AudioPlayer--inverted': inverted }">
     <div :class="['AudioPlayer__textbox', { 'AudioPlayer__textbox--overflowing' : overflowing, 'AudioPlayer__textbox--no-margin-bottom' : showPlaybar }]">
       <div ref="wrapper" class="AudioPlayer__text-wrapper">
         <span ref="ticker" class="AudioPlayer__text" v-html="program" />
@@ -60,6 +60,10 @@ export default {
       type: Boolean,
       default: false
     },
+    inverted: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -251,6 +255,38 @@ export default {
     max-width: 100%;
     width: 100%;
 
+    &--inverted {
+      background-color: $s-color-black;
+      color: $s-color-white;
+
+      .#{$c}__button {
+        filter: invert(100%);
+
+        &:hover {
+          filter: none;
+          border: 1px solid $s-color-white;
+        }
+      }
+
+      .#{$c}__textbox,
+      .#{$c}__track-line,
+      .#{$c}__range-wrapper {
+        border: 1px solid $s-color-white;
+      }
+
+      input[type=range]::-webkit-slider-runnable-track,
+      input[type=range]::-moz-range-track {
+        background-color: $s-color-white;
+      }
+
+      .#{$c}__range-wrapper,
+      input[type=range]::-webkit-slider-thumb,
+      input[type=range]::-moz-range-thumb {
+        border: 1px solid $s-color-white;
+        background: $s-color-black;
+      }
+    }
+
     &__textbox {
       padding: 0 0.3rem;
       height: $c-audioplayer-text-wrapper-size;
@@ -357,22 +393,22 @@ export default {
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      border: 1px solid #000000;
+      border: 1px solid $s-color-black;
       height: 3rem;
       width: 16px;
       border-radius: 0;
-      background: #ffffff;
+      background: $s-color-white;
       cursor: pointer;
       margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
     }
 
     /* All the same stuff for Firefox */
     input[type=range]::-moz-range-thumb {
-      border: 1px solid #000000;
+      border: 1px solid $s-color-black;
       height: 3rem;
       width: 16px;
       border-radius: 0;
-      background: #ffffff;
+      background: $s-color-white;
       cursor: pointer;
     }
 
