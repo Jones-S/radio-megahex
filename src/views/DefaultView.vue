@@ -167,11 +167,15 @@ export default {
     teasers() {
       if (!this.page?.content?.related) return false
       const teasers = this.page.content.related.map(teaser => {
-        return {
-          image: {
+        let image = false
+        if (teaser?.teaserImage?.image?.thumb) {
+          image = {
             url: teaser?.teaserImage?.image?.thumb,
             alt: teaser?.teaserImage?.image?.alt
-          },
+          }
+        }
+        return {
+          image,
           richText: teaser?.teaserText || '',
           title: teaser?.title || '',
           link: {

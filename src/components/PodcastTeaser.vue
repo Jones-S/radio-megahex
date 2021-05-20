@@ -1,7 +1,8 @@
 <template>
   <div class="PodcastTeaser">
     <div class="PodcastTeaser__image-container">
-      <img class="PodcastTeaser__image" :src="image.url" :alt="image.alt" />
+      <img v-if="image" class="PodcastTeaser__image" :src="image.url" :alt="image.alt" />
+      <div v-else class="PodcastTeaser__fallback-image" />
     </div>
     <div class="PodcastTeaser__player-container">
       <AudioPlayer :src="file" :program="title" :show-playbar="true" inverted></AudioPlayer>
@@ -102,11 +103,17 @@ export default {
       }
     }
 
-    &__image {
+    &__image,
+    &__fallback-image {
       border: 1px solid $s-color-white;
       max-width: 100%;
       width: 100%;
       display: block;
+    }
+
+    &__fallback-image {
+      background-color: $s-color-primary;
+      padding-top: 100%; // making it the same height as width
     }
 
     &__player-container {
