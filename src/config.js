@@ -1,5 +1,5 @@
 export default {
-  recordingsUrl: "https://kein.fm/megahex-json/",
+  recordingsUrl: "https://kein.fm/megahex-json/recordings/",
   uploadsUrl: "https://kein.fm/megahex-json/uploads/upstate/",
   streamUrl: "https://zzz.megahex.fm:8001/listen?type=.mp3",
   apiBaseUrlLocal: "http://cms.megahex.test/proxy", // using a proxy to auth with kirby
